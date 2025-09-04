@@ -36,6 +36,7 @@ async function sendAdminConsultationNotification(
             <li><strong>Email:</strong> ${formdata.email || "N/A"}</li>
             <li><strong>Health Concern:</strong> ${formdata.healthConcern}</li>
             <li><strong>Treatment/Condition:</strong> ${formdata.condition}</li>
+            <li><strong>City:</strong> ${formdata.city || "N/A"}</li>
             <li><strong>Requested At:</strong> ${new Date().toString()}</li>
           </ul>
           <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />

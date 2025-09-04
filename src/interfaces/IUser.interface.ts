@@ -26,10 +26,11 @@ interface AuthRequest extends Request {
 interface IBookConsultationForm{
     fullName: string;
     mobileNumber: string;
-    isWhatsaapConnect: boolean;
-    email: string;
-    healthConcern: string;
-    condition: string;
+    isWhatsaapConnect?: boolean;
+    email?: string;
+    healthConcern?: string;
+    condition?: string;
+    city?:string
 }
 
 export { IUser, ILoginUser, DecodedToken, AuthRequest, IBookConsultationForm };
