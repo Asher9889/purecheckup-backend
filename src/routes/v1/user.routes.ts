@@ -1,11 +1,14 @@
 import express from "express";
 import { authController, blogsController, userController  } from "../../controllers";
 
-import { authMiddleware, validateUser } from "../../middlewares";
+import { authMiddleware, validateUser, upload } from "../../middlewares";
+import { validateConditionPatientSchema } from "../../utils/schema-validation/validateUser.schema";
+import { validateConditionPatient } from "../../middlewares/validateUser.middleware";
 
 const router = express.Router();
 
 router.post("/book-appointment",  userController.bookFreeConsultation);
+router.post("/condition/book-appointment",  upload.single("image"),  validateConditionPatient, userController.bookConditionConsultation );
 // router.post("/login", authController.login);
 // router.post("/refresh", authController.refresh);
 // router.post("/logout", authController.logout);

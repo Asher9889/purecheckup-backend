@@ -4,6 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import { AuthRequest, DecodedToken } from "../interfaces";
 import { User } from "../models";
+import { validateConditionPatientSchema } from "../utils/schema-validation/validateUser.schema";
 
 function validateUser(req: Request, res: Response, next: NextFunction) {
     const { value, error } = validateUserSchema(req.body);
@@ -17,6 +18,16 @@ function validateUser(req: Request, res: Response, next: NextFunction) {
     next();
 }
 
+function validateConditionPatient(req: Request, res: Response, next: NextFunction) {
+    const { value, error } = validateConditionPatientSchema(req.body);
+
+    if (error) {
+        const statusCode = StatusCodes.BAD_REQUEST;
+        const msg = error.message;
+        return next(new ApiErrorResponse(statusCode, msg));
+    }
+    next();
+}
 
 
 
@@ -63,5 +74,5 @@ async function authMiddleware(req: AuthRequest, res: Response, next: NextFunctio
     }
 };
 
-export { authMiddleware }
+export { authMiddleware, validateConditionPatient }
 export default validateUser;

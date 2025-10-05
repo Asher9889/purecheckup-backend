@@ -33,4 +33,12 @@ interface IBookConsultationForm{
     city?:string
 }
 
-export { IUser, ILoginUser, DecodedToken, AuthRequest, IBookConsultationForm };
+interface IConditionConsultationForm{ 
+    fullName: string;
+    mobileNumber: string;
+    city:string;
+    mode: string;
+    image: any;
+}
+
+export { IUser, ILoginUser, DecodedToken, AuthRequest, IBookConsultationForm, IConditionConsultationForm };

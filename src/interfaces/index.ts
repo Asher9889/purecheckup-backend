@@ -1,3 +1,3 @@
-import { IUser, ILoginUser, DecodedToken, AuthRequest, IBookConsultationForm } from "./IUser.interface";
+import { IUser, ILoginUser, DecodedToken, AuthRequest, IBookConsultationForm, IConditionConsultationForm } from "./IUser.interface";
 
-export { IUser, ILoginUser, DecodedToken, AuthRequest, IBookConsultationForm }
+export { IUser, ILoginUser, DecodedToken, AuthRequest, IBookConsultationForm, IConditionConsultationForm }

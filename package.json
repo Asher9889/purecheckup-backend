@@ -1,5 +1,5 @@
 {
-  "name": "astro_talk-server",
+  "name": "purecheckup-server",
   "version": "1.0.0",
   "main": "server.tsx",
   "scripts": {

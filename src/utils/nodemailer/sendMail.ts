@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
 import { config } from "../../config";
-import { IBookConsultationForm } from "../../interfaces";
+import { IBookConsultationForm, IConditionConsultationForm } from "../../interfaces";
+import path from "path";
+import fs from "fs";
 
 const transporter = nodemailer.createTransport({
   host: config.hostingerWebMailHost,
@@ -16,13 +18,19 @@ const transporter = nodemailer.createTransport({
 /**
  * Send notification to hospital/admin when a patient books consultation
  */
+
+const formatField = (value: any, label: string, formatter?: (val: any) => string) => {
+  if (value === undefined || value === null) return '';
+  const displayValue = formatter ? formatter(value) : value;
+  return `<li><strong>${label}:</strong> ${displayValue}</li>`;
+};
 async function sendAdminConsultationNotification(
-  formdata: IBookConsultationForm
+  formdata: IBookConsultationForm | IConditionConsultationForm | any
 ): Promise<boolean> {
   try {
-    const info = await transporter.sendMail({
+    const mailOptions:any = {
       from: `"PureCheckup" <${config.hostingerWebMailUser}>`,
-      to: config.clientEmail, // hospital/admin email
+      to: config.clientEmail,
       subject: "📥 New Consultation Booking - PureCheckup",
       html: `
         <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
@@ -30,20 +38,59 @@ async function sendAdminConsultationNotification(
           <p>Hello Admin,</p>
           <p>A new consultation request has been submitted on <strong>PureCheckup</strong>.</p>
           <ul>
-            <li><strong>Full Name:</strong> ${formdata.fullName}</li>
-            <li><strong>Mobile Number:</strong> ${formdata.mobileNumber}</li>
-            <li><strong>WhatsApp Consent:</strong> ${formdata.isWhatsaapConnect ? "Yes" : "No"}</li>
-            <li><strong>Email:</strong> ${formdata.email || "N/A"}</li>
-            <li><strong>Health Concern:</strong> ${formdata.healthConcern}</li>
-            <li><strong>Treatment/Condition:</strong> ${formdata.condition}</li>
-            <li><strong>City:</strong> ${formdata.city || "N/A"}</li>
-            <li><strong>Requested At:</strong> ${new Date().toString()}</li>
+            ${formdata.fullName && formatField(formdata.fullName, 'Full Name')}
+            ${formdata.mobileNumber && formatField(formdata.mobileNumber, 'Mobile Number')}
+            ${formdata.isWhatsaapConnect !== undefined && formatField(
+              formdata.isWhatsaapConnect ? 'Yes' : 'No', 
+              'WhatsApp Consent'
+            )}
+            ${formdata.email && formatField(formdata.email, 'Email')}
+            ${formdata.healthConcern && formatField(formdata.healthConcern, 'Health Concern')}
+            ${(formdata.condition || formdata.mode) && formatField(
+              formdata.condition || formdata.mode, 
+              formdata.condition ? 'Condition' : 'Consultation Type'
+            )}
+            ${formdata.city && formatField(formdata.city, 'City')}
+            ${formatField(
+              new Date().toLocaleString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              }), 
+              'Requested At'
+            )}
           </ul>
+          ${formdata.mode ? `<p><strong>Mode:</strong> ${formdata.mode}</p>` : ''}
+          ${formdata.image ? `<p>An image was uploaded and attached to this email.</p>` : ''}
           <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />
           <p style="font-size: 12px; color: #999;">This is an automated message from PureCheckup.</p>
         </div>
       `,
-    });
+    };
+
+    // Attach uploaded image when available (expecting a file path on disk)
+    if (formdata.image) {
+      const imagePath = formdata.image;
+      try {
+        if (fs.existsSync(imagePath)) {
+          mailOptions.attachments = [
+            {
+              filename: path.basename(imagePath),
+              path: imagePath,
+            },
+          ];
+        } else {
+          console.warn("Uploaded image not found at path:", imagePath);
+        }
+      } catch (err) {
+        console.warn("Error checking/attaching image:", err);
+      }
+    }
+
+    const info = await transporter.sendMail(mailOptions);
 
     console.log("✅ Admin consultation notification sent:", info.messageId);
     return true;

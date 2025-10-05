@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { IUser, ILoginUser } from "../../interfaces";
+import { IUser, ILoginUser, IConditionConsultationForm } from "../../interfaces";
 
 interface IRegisterUser extends IUser {
     password: string;
@@ -86,6 +86,35 @@ function validateLoginUserSchema(userDetails: ILoginUser) {
 
 }
 
+// patient Validation
+function validateConditionPatientSchema (patientData:IConditionConsultationForm ) {
+    const patientSchema = Joi.object({
+        fullName: Joi.string().required().messages({
+            'string.empty': 'Full name is required',
+            'any.required': 'Full name is required'
+        }),
+        mobileNumber: Joi.string()
+            .pattern(/^[0-9]{10}$/)
+            .required()
+            .messages({
+                'string.pattern.base': 'Please enter a valid mobile number',
+                'string.empty': 'Mobile number is required',
+                'any.required': 'Mobile number is required'
+            }),
+        city: Joi.string().required().messages({
+            'string.empty': 'City is required',
+            'any.required': 'City is required'
+        }),
+        mode: Joi.string().valid('online', 'clinic').required().messages({
+            'string.empty': 'Consultation mode is required',
+            'any.only': 'Consultation mode must be either online or offline',
+            'any.required': 'Consultation mode is required'
+        }),
+        image: Joi.any().optional()
+    })
+    return patientSchema.validate(patientData);
+};
 
-export { validateUserSchema, validateLoginUserSchema }
+
+export { validateUserSchema, validateLoginUserSchema, validateConditionPatientSchema }
 

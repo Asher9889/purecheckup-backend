@@ -11,9 +11,9 @@ import compression from "compression";
 
 const app = express();
 
-// connectMongoDB().catch((err) => {
-//     console.log(err)
-// })
+connectMongoDB().catch((err) => {
+    console.log(err)
+})
 
 
 app.use(cors({
