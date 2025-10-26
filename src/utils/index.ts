@@ -10,10 +10,11 @@ import { getCookieOptions } from "./cookie-options/cookieOptions";
 
 //============ Schema Validations =================>
 import { validateUserSchema, validateLoginUserSchema } from "./schema-validation/validateUser.schema";
+import { validateScheduleSurgeryForm } from "./schema-validation/contact.schema";
 
 
 //============= Node Mailer ===============>
 import { sendAdminSignupNotification, sendUserWelcomeEmail, sendAdminConsultationNotification, sendUserConsultationConfirmation, sendForgetPasswordEmail } from "./nodemailer/sendMail";
 
 
-export { ApiErrorResponse, ApiSuccessResponse, checkRouteExists, globalErrorHandler, blogResponse, validateUserSchema, validateLoginUserSchema, authResponse, sendAdminSignupNotification, sendUserWelcomeEmail, sendAdminConsultationNotification, sendUserConsultationConfirmation, sendForgetPasswordEmail, getCookieOptions }
+export { ApiErrorResponse, ApiSuccessResponse, checkRouteExists, globalErrorHandler, blogResponse, validateUserSchema, validateLoginUserSchema, authResponse, sendAdminSignupNotification, sendUserWelcomeEmail, sendAdminConsultationNotification, sendUserConsultationConfirmation, sendForgetPasswordEmail, getCookieOptions, validateScheduleSurgeryForm }  

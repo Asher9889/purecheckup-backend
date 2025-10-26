@@ -37,6 +37,9 @@ app.use(cookieParser());
 // app.use(authMiddleware);
 
 app.use("/api", apiRoutes)
+app.get('/test', (req, res) => {
+    res.json({ message: 'Test route is working!' });
+});
 console.log(path.join(__dirname, '../uploads'))
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

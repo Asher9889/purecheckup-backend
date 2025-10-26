@@ -1,6 +1,7 @@
 import { signUp, login, refresh, logout, me, forgetPassword } from "./auth.controller";
 import { createblog, getBlogs, getBlog, updateBlog, deleteBlog } from "./blog.controller";
 import { bookFreeConsultation, bookConditionConsultation} from "./user.controller";
+import { scheduleSurgery } from "./contact.controller";
 
 const blogsController = {
     createblog, getBlogs, getBlog, updateBlog, deleteBlog
@@ -13,4 +14,8 @@ const authController = {
 const userController = {
     bookFreeConsultation, bookConditionConsultation
 }
-export { blogsController, authController, userController }
+
+const contactController = {
+    scheduleSurgery
+}
+export { blogsController, authController, userController, contactController }
