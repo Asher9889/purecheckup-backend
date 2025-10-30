@@ -1,0 +1,8 @@
+const contactType = {
+    
+    SCHEDULE_SURGERY: "SCHEDULE_SURGERY",
+    TALK_TO_INSURANCE_ADVISOR: "TALK_TO_INSURANCE_ADVISOR",
+    QUICK_EMI_CHECK: "QUICK_EMI_CHECK"
+}
+
+export { contactType }

@@ -3,7 +3,9 @@ import { contactController } from "../../controllers";
 
 const router = express.Router();
 
-router.post("/advisor", contactController.scheduleSurgery)
+router.post("/advisor", contactController.scheduleSurgery);
+router.post("/insurance-advisor", contactController.talkToInsuranceAdvisor);
+router.post("/quick-emi-check", contactController.quickEmiCheck);
 // router.post("/login", authController.login);
 // router.post("/refresh", authController.refresh);
 // router.post("/logout", authController.logout);

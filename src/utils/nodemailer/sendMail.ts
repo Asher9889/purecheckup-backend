@@ -291,5 +291,58 @@ async function sendSurgeryScheduleEmailToAdmin(
   }
 }
 
+async function sendQuickEmiCheckEmailToAdmin(
+  adminEmail: string,
+  patientData: {
+    name: string;
+    mobile: string;
+    city: string;
+    disease: string;
+    estimatedCost?: string;
+    tenure?: string;
+  }
+): Promise<boolean> {
+  try {
+    const info = await transporter.sendMail({
+      from: `"PureCheckup" <${config.hostingerWebMailUser}>`,
+      to: adminEmail,
+      subject: "🩺 New Surgery Schedule Request - PureCheckup",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #007BFF;">New Surgery Schedule Request</h2>
+          <p>Hello Admin,</p>
+          <p>A new surgery consultation request has been submitted on <strong>PureCheckup</strong>.</p>
+          
+          <h3 style="color: #444;">Patient Details:</h3>
+          <ul style="list-style-type: none; padding: 0;">
+            <li><strong>Name:</strong> ${patientData.name}</li>
+            <li><strong>Mobile:</strong> ${patientData.mobile}</li>
+            <li><strong>City:</strong> ${patientData.city}</li>
+            <li><strong>Treatment / Disease:</strong> ${patientData.disease}</li>
+            <li><strong>Estimated Cost:</strong> ${patientData?.estimatedCost ? "₹" + patientData?.estimatedCost : "Not Provided"}</li>
+            <li><strong>Tenure:</strong> ${patientData?.tenure ? patientData?.tenure + " Months" : "Not Provided"}</li>
+          </ul>
 
-export { sendAdminConsultationNotification, sendAdminSignupNotification, sendUserWelcomeEmail, sendUserConsultationConfirmation, sendForgetPasswordEmail, sendSurgeryScheduleEmailToAdmin }
+          <p style="margin-top: 20px;">
+            Please reach out to the patient to confirm their appointment and assign the appropriate medical expert.
+          </p>
+
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
+          <p style="font-size: 12px; color: #888;">
+            This is an automated email from PureCheckup’s surgery scheduling system.<br/>
+            — PureCheckup Admin Notification Service
+          </p>
+        </div>
+      `,
+    });
+
+    console.log("✅ Surgery schedule email sent to admin:", info.messageId);
+    return true;
+  } catch (err) {
+    console.error("❌ Error sending surgery schedule email:", err);
+    return false;
+  }
+}
+
+
+export { sendAdminConsultationNotification, sendAdminSignupNotification, sendUserWelcomeEmail, sendUserConsultationConfirmation, sendForgetPasswordEmail, sendSurgeryScheduleEmailToAdmin, sendQuickEmiCheckEmailToAdmin }

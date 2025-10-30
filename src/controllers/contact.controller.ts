@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { ApiErrorResponse, ApiSuccessResponse, sendAdminConsultationNotification, sendUserConsultationConfirmation, validateScheduleSurgeryForm } from "../utils";
-import { SCHEDULE_SURGERY_RESPONSE } from "../constants/contact/contactApiResponse";
-import { sendSurgeryScheduleEmailToAdmin } from "../utils/nodemailer/sendMail";
-import { config } from "../config";
+import { ApiErrorResponse, ApiSuccessResponse, validateQuickEmiCheckForm, validateScheduleSurgeryForm, validateTalkToInsuranceAdvisorForm } from "../utils";
+import { QUICK_EMI_CHECK_RESPONSE, SCHEDULE_SURGERY_RESPONSE, TALK_TO_INSURANCE_ADVISOR_RESPONSE } from "../constants/contact/contactApiResponse";
 import { contactService } from "../services";
+import { contactType } from "../constants";
 
 export async function scheduleSurgery(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
@@ -24,6 +23,52 @@ export async function scheduleSurgery(req: Request, res: Response, next: NextFun
         if (error instanceof ApiErrorResponse) {
             return next(error);
         }
-        return next(new ApiErrorResponse(SCHEDULE_SURGERY_RESPONSE.SERVER_ERROR.statusCode, SCHEDULE_SURGERY_RESPONSE.SERVER_ERROR.message))
+        return next(new ApiErrorResponse(SCHEDULE_SURGERY_RESPONSE.SERVER_ERROR.statusCode, error.message))
     }
+}
+
+export async function talkToInsuranceAdvisor(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+        const formdata = req.body;
+        formdata.code = contactType.TALK_TO_INSURANCE_ADVISOR;
+        const { error, value } = validateTalkToInsuranceAdvisorForm(formdata);
+        if (error) {
+            throw new ApiErrorResponse(TALK_TO_INSURANCE_ADVISOR_RESPONSE.VALIDATION_ERROR.statusCode, error.message);
+        }
+
+        await contactService.talkToInsuranceAdvisor(value)
+        
+        // await sendUserConsultationConfirmation(value);
+
+        return res.status(SCHEDULE_SURGERY_RESPONSE.SUCCESS.statusCode).json(new ApiSuccessResponse(SCHEDULE_SURGERY_RESPONSE.SUCCESS.statusCode, SCHEDULE_SURGERY_RESPONSE.SUCCESS.message))
+    } catch (error: any) {
+        console.error("Error sending mail:", error);
+        if (error instanceof ApiErrorResponse) {
+            return next(error);
+        }
+        return next(new ApiErrorResponse(SCHEDULE_SURGERY_RESPONSE.SERVER_ERROR.statusCode, error.message))
+    }
+}
+
+export async function quickEmiCheck(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+        const formdata = req.body;
+        formdata.code = contactType.QUICK_EMI_CHECK;
+        const { error, value } = validateQuickEmiCheckForm(formdata);
+        if (error) {
+            throw new ApiErrorResponse(QUICK_EMI_CHECK_RESPONSE.VALIDATION_ERROR.statusCode, error.message);
+        }
+
+        await contactService.quickEmiCheck(value)
+        
+        // await sendUserConsultationConfirmation(value);
+
+        return res.status(QUICK_EMI_CHECK_RESPONSE.SUCCESS.statusCode).json(new ApiSuccessResponse(QUICK_EMI_CHECK_RESPONSE.SUCCESS.statusCode, QUICK_EMI_CHECK_RESPONSE.SUCCESS.message))
+    } catch (error: any) {
+        console.error("Error sending mail:", error);
+        if (error instanceof ApiErrorResponse) {
+            return next(error);
+        }
+        return next(new ApiErrorResponse(QUICK_EMI_CHECK_RESPONSE.SERVER_ERROR.statusCode, error.message))
+    } 
 }
