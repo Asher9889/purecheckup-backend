@@ -1,6 +1,6 @@
 import { register, login, refresh, forgetPassword } from "./auth.service";
 import { bookConditionConsultationService } from "./user.service";
-import { scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck } from "./contact.service";
+import { scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck, requestCallback } from "./contact.service";
 
 const authService = {
     register, login, refresh, forgetPassword
@@ -11,7 +11,7 @@ const userPatientService = {
 }
 
 const contactService = {
-    scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck
+    scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck, requestCallback
 }
 
 export { authService, userPatientService, contactService }

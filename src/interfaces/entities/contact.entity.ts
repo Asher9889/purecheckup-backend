@@ -20,3 +20,11 @@ export interface IQuickEmiCheckForm {
     estimatedCost: string;
     tenure: string;
 }
+
+export interface IRequestCallbackForm {
+    name: string;
+    mobile: string;
+    city: string;
+    helpType: string;
+    message: string;
+}

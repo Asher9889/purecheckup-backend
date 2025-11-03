@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ApiErrorResponse, ApiSuccessResponse, validateQuickEmiCheckForm, validateScheduleSurgeryForm, validateTalkToInsuranceAdvisorForm } from "../utils";
-import { QUICK_EMI_CHECK_RESPONSE, SCHEDULE_SURGERY_RESPONSE, TALK_TO_INSURANCE_ADVISOR_RESPONSE } from "../constants/contact/contactApiResponse";
+import { QUICK_EMI_CHECK_RESPONSE, REQUEST_CALLBACK_RESPONSE, SCHEDULE_SURGERY_RESPONSE, TALK_TO_INSURANCE_ADVISOR_RESPONSE } from "../constants/contact/contactApiResponse";
 import { contactService } from "../services";
 import { contactType } from "../constants";
+import { validateRequestCallbackForm } from "../utils/schema-validation/contact.schema";
 
 export async function scheduleSurgery(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
@@ -70,5 +71,25 @@ export async function quickEmiCheck(req: Request, res: Response, next: NextFunct
             return next(error);
         }
         return next(new ApiErrorResponse(QUICK_EMI_CHECK_RESPONSE.SERVER_ERROR.statusCode, error.message))
+    } 
+}
+
+export async function requestCallback(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+        const formdata = req.body;
+        formdata.code = contactType.REQUEST_CALLBACK;
+        const { error, value } = validateRequestCallbackForm(formdata);
+        if (error) {
+            throw new ApiErrorResponse(REQUEST_CALLBACK_RESPONSE.VALIDATION_ERROR.statusCode, error.message);
+        }
+        await contactService.requestCallback(value)
+        // await sendUserConsultationConfirmation(value);
+        return res.status(REQUEST_CALLBACK_RESPONSE.SUCCESS.statusCode).json(new ApiSuccessResponse(REQUEST_CALLBACK_RESPONSE.SUCCESS.statusCode, REQUEST_CALLBACK_RESPONSE.SUCCESS.message))
+    } catch (error: any) {
+        console.error("Error sending mail:", error);
+        if (error instanceof ApiErrorResponse) {
+            return next(error);
+        }
+        return next(new ApiErrorResponse(REQUEST_CALLBACK_RESPONSE.SERVER_ERROR.statusCode, error.message))
     } 
 }

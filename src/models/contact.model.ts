@@ -8,6 +8,7 @@ interface IContact extends Document {
     disease: string;
     estimatedCost?: number;
     tenure?: number;
+    helpType?: string;
 }
 const ContactSchema = new mongoose.Schema<IContact>({
     name: {
@@ -28,7 +29,6 @@ const ContactSchema = new mongoose.Schema<IContact>({
     },
     disease: {
         type: String,
-        default: null
     },
     estimatedCost: {
         type: Number,
@@ -36,6 +36,11 @@ const ContactSchema = new mongoose.Schema<IContact>({
     tenure: {
         type: Number,
     },
+    helpType: {
+        type: String,
+    }
+}, {
+    timestamps: true
 });
 
 const Contact = mongoose.model<IContact>("Contact", ContactSchema);
