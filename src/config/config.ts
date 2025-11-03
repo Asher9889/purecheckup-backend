@@ -20,6 +20,11 @@ interface Config {
     hostingerWebMailPass: string
     clientEmail: string;
 
+    // Super Admin Seeder
+    superAdminEmail: string;
+    superAdminPassword: string;
+    superAdminPhone: string;
+    superAdminFullName: string;
 }
 
 const config: Config = {
@@ -34,6 +39,12 @@ const config: Config = {
     dbName: process.env.MONGO_DBNAME || "",
     accessSecret: process.env.JWT_ACCESS_SECRET || "test",
     refreshSecret: process.env.JWT_REFRESH_SECRET || "test",
+
+    // Super Admin Seeder
+    superAdminEmail: process.env.SUPER_ADMIN_EMAIL || "",
+    superAdminPassword: process.env.SUPER_ADMIN_PASSWORD || "",
+    superAdminPhone: process.env.SUPER_ADMIN_PHONE || "",
+    superAdminFullName: process.env.SUPER_ADMIN_FULLNAME || "",
 
     // Hostinger
     hostingerWebMailHost: process.env.HOSTINGER_WEB_MAIL_HOST || "",
