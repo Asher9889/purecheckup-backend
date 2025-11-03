@@ -7,9 +7,6 @@ import { AuthRequest } from "../interfaces";
 
 
 async function signUp(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-    /**
-     * 1. Schema validation handled by userValidate Middleware.
-     */
     try {
         const { data, flag } = await authService.register(req.body);
         return res.status(StatusCodes.OK).json(new ApiSuccessResponse(StatusCodes.OK, authResponse.created, data))

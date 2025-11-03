@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 import { IUser } from "../interfaces";
 import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
@@ -9,8 +9,8 @@ interface IMongoUser extends IUser, Document {
   comparePassword(candidatePassword: string): Promise<boolean>;
   generateAccessToken(): string;
   generateRefreshToken(): string;
-  resetPasswordToken: string;
-  resetPasswordExpires: Date;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
 }
 
 const userSchema = new Schema(
@@ -39,12 +39,10 @@ const userSchema = new Schema(
       required: true,
       minlength: 6,
     },
-    resetPasswordToken: {
-      type: String,
+    roleId: {
+      type: Types.ObjectId,
+      ref: "Role",
     },
-    resetPasswordExpires: {
-      type: Date,
-    }
   },
   { timestamps: true }
 );

@@ -4,6 +4,7 @@
   "main": "server.tsx",
   "scripts": {
     "dev": "nodemon ./src/server.ts",
+    "seed": "ts-node ./src/db/seed/index.ts",
     "build": "tsc"
   },
   "author": "saurabh kushwaha",

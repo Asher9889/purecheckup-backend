@@ -3,9 +3,10 @@ import { config } from "../config/index";
 import { ApiErrorResponse } from "../utils";
 import { StatusCodes } from "http-status-codes";
 
+export const mongoUrl = `mongodb://${config.mongoUser}:${config.mongoPassword}@${config.mongoHost}:${config.mongoPort}/${config.dbName}?authSource=${config.mongoAuthSource}`;
+
 async function connectMongoDB(): Promise<Connection | undefined> {
     try {
-        const mongoUrl = `mongodb://${config.mongoUser}:${config.mongoPassword}@${config.mongoHost}:${config.mongoPort}/${config.dbName}?authSource=${config.mongoAuthSource}`;
         
         await mongoose.connect(mongoUrl);
 
@@ -15,6 +16,19 @@ async function connectMongoDB(): Promise<Connection | undefined> {
     } catch (error) {
         throw new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, "Failed to connect to MongoDb");
     }
+}
+
+// For seeders
+export async function connectDB(uri: string) {
+  if (!uri) throw new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, "MONGO_URI not defined");
+  await mongoose.connect(uri);
+  console.log("✅ Connected to MongoDB");
+}
+
+// For seeders
+export async function disconnectDB() {
+  await mongoose.disconnect();
+  console.log("🔌 Disconnected from MongoDB");
 }
 
 mongoose.connection.on("connecting", () => {

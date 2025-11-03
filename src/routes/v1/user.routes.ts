@@ -9,6 +9,18 @@ const router = express.Router();
 
 router.post("/book-appointment",  userController.bookFreeConsultation);
 router.post("/condition/book-appointment",  upload.single("image"),  validateConditionPatient, userController.bookConditionConsultation );
+
+
+
+
+// auth routes
+router.post("/signup", authController.signUp);
+
+
+
+
+
+
 // router.post("/login", authController.login);
 // router.post("/refresh", authController.refresh);
 // router.post("/logout", authController.logout);
