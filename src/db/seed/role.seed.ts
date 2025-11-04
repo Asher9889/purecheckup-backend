@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { Role } from "../../models";
 import { ApiErrorResponse } from "../../utils";
+import { RoleService } from "../../domain";
 
 const roles = [
     {
@@ -44,16 +45,15 @@ const roles = [
 
 async function seedRoles() {
     try {
-        const allRolesData = await Role.find({}, { name: 1 }).lean();
+        const roleService = new RoleService();
+        const allRolesData = await roleService.findAll();
         const existingRoleNames = new Set(allRolesData.map((role) => role.name));
-
         const rolesToInsert = roles.filter((role) => !existingRoleNames.has(role.name));
 
         if (rolesToInsert.length === 0) {
             return console.log("ℹ️ All roles already exist.");
         }
-
-        await Role.insertMany(rolesToInsert);
+        await roleService.bulkCreate(rolesToInsert);
         console.log(`✅ Created ${rolesToInsert.length} new role(s).`);
 
     } catch (error: any) {

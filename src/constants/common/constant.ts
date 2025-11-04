@@ -1,9 +1,14 @@
 const contactType = {
-    
     SCHEDULE_SURGERY: "SCHEDULE_SURGERY",
     TALK_TO_INSURANCE_ADVISOR: "TALK_TO_INSURANCE_ADVISOR",
     QUICK_EMI_CHECK: "QUICK_EMI_CHECK",
     REQUEST_CALLBACK: "REQUEST_CALLBACK"
 }
 
-export { contactType }
+const ROLE = {
+    SUPER_ADMIN: "SUPER_ADMIN",
+    ADMIN: "ADMIN",
+    USER: "USER"
+}
+
+export { contactType, ROLE }

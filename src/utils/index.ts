@@ -17,4 +17,14 @@ import { validateScheduleSurgeryForm, validateTalkToInsuranceAdvisorForm, valida
 import { sendAdminSignupNotification, sendUserWelcomeEmail, sendAdminConsultationNotification, sendUserConsultationConfirmation, sendForgetPasswordEmail } from "./nodemailer/sendMail";
 
 
+//============= Tokens ===============>
+import { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } from "./tokens/tokens.utils";
+
+export const jwtToken = {
+    generateAccessToken,
+    generateRefreshToken,
+    verifyAccessToken,
+    verifyRefreshToken
+}
+
 export { ApiErrorResponse, ApiSuccessResponse, checkRouteExists, globalErrorHandler, blogResponse, validateUserSchema, validateLoginUserSchema, authResponse, sendAdminSignupNotification, sendUserWelcomeEmail, sendAdminConsultationNotification, sendUserConsultationConfirmation, sendForgetPasswordEmail, getCookieOptions, validateScheduleSurgeryForm, validateTalkToInsuranceAdvisorForm, validateQuickEmiCheckForm }  

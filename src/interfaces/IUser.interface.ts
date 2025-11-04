@@ -40,5 +40,15 @@ interface IConditionConsultationForm{
     mode: string;
     image: any;
 }
+interface IReqUser {
+    id: string;
+    email: string;
+    roleId: string;
+    role: {
+        name: string;
+        permissions: string[];
+    };
+}
 
-export { IUser, ILoginUser, DecodedToken, AuthRequest, IBookConsultationForm, IConditionConsultationForm };
+
+export {IReqUser, IUser, ILoginUser, DecodedToken, AuthRequest, IBookConsultationForm, IConditionConsultationForm };

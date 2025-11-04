@@ -1,5 +1,5 @@
-import { contactType } from "./common/constant";
+import { contactType, ROLE } from "./common/constant";
 
 
 
-export { contactType }
+export { contactType, ROLE }
