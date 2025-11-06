@@ -1,27 +1,43 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { RoleService } from "../domain";
 import { ROLE } from "../constants";
 import { ApiErrorResponse } from "../utils";
 import { StatusCodes } from "http-status-codes";
 
-async function authorize(resource: string, action: string) {
-  const permission = `${resource}:${action}`; // e.g., blog:create
-  return async (req: Request, res: Response, next: NextFunction) => {
-    const user = req.user; // must be set by auth middleware (JWT)
-    if (!user) return res.status(401).send({ message: "Unauthorized" });
+const roleService = new RoleService();
 
-    // quick super-admin short-circuit
-    if (user.role?.name === ROLE.SUPER_ADMIN) return next();
+/**
+ * Factory middleware for RBAC authorization.
+ * @param resource - e.g. "blog"
+ * @param action - e.g. "create"
+ */
+export function authorize(resource: string, action: string) {
+  const permission = `${resource}:${action}`; // e.g. "blog:create"
 
-    // Check cached role-permissions
-    const roleService = new RoleService();
-    const allowed = await roleService.hasPermission(user.roleId, permission);
-    if (!allowed) {
-      // auditLog({ userId: user.id, permission, allowed: false, path: req.path });
-      return next(new ApiErrorResponse(StatusCodes.UNAUTHORIZED, "Forbidden"));
+  return async (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      const user = req.user;
+
+      if (!user) {
+        return next(new ApiErrorResponse(StatusCodes.UNAUTHORIZED, "User not authenticated"));
+      }
+
+      // Fast path for super admin
+      if (user.role?.name === ROLE.SUPER_ADMIN) {
+        return next();
+      }
+
+      const hasAccess = await roleService.hasPermission(user.roleId, permission);
+      if (!hasAccess) {
+        // auditLog({ userId: user.id, permission, allowed: false, path: req.path });
+        return next(new ApiErrorResponse(StatusCodes.FORBIDDEN, "Access denied"));
+      }
+
+      // auditLog({ userId: user.id, permission, allowed: true, path: req.path });
+      next();
+
+    } catch (err) {
+      next(new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, "Authorization failed"));
     }
-
-    // auditLog({ userId: user.id, permission, allowed: true, path: req.path });
-    next();
   };
 }
