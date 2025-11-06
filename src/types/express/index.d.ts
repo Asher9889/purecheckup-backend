@@ -1,4 +1,4 @@
-import { IReqUser } from "../interfaces";
+import { IReqUser } from "../../interfaces";
 
 declare global {
   namespace Express {
