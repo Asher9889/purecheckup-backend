@@ -7,11 +7,10 @@ async function createblog(req: Request, res: Response, next: NextFunction) {
   try {
     const { title, content } = req.body;
     if (!title || !content) {
-      throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, "Title ane Content mandatory.")
+      throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, "Title and Content mandatory.")
     }
     // Find the last blog's ID
     const lastBlog = await Blog.findOne({}, {_id: 0, __v: 0}).sort({ id: -1 }).exec();
-    console.log("last blog", lastBlog)
     const newId = lastBlog ? lastBlog.id + 1 : 1;
 
     // multer adds `file` to req
