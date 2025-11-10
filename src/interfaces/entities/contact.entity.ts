@@ -28,3 +28,11 @@ export interface IRequestCallbackForm {
     helpType: string;
     message: string;
 }
+
+export interface IQuickDoctorConnectForm {
+    doctorName: string;
+    specialization: string[];
+    mail: string;
+    mobile: string;
+    city: string;
+}

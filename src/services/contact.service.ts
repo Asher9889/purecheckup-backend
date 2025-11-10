@@ -1,10 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { config } from "../config";
-import { QUICK_EMI_CHECK_RESPONSE, REQUEST_CALLBACK_RESPONSE, SCHEDULE_SURGERY_RESPONSE } from "../constants/contact/contactApiResponse";
+import { QUICK_DOCTOR_CONNECT_RESPONSE, QUICK_EMI_CHECK_RESPONSE, REQUEST_CALLBACK_RESPONSE, SCHEDULE_SURGERY_RESPONSE } from "../constants/contact/contactApiResponse";
 import { IQuickEmiCheckForm, IRequestCallbackForm, IScheduleSurgeryForm, ITalkToInsuranceAdvisorForm } from "../interfaces";
 import { Contact } from "../models";
 import { ApiErrorResponse } from "../utils";
-import { sendQuickEmiCheckEmailToAdmin, sendRequestCallbackEmailToAdmin, sendSurgeryScheduleEmailToAdmin } from "../utils/nodemailer/sendMail";
+import { sendQuickDoctorConnectEmailToAdmin, sendQuickEmiCheckEmailToAdmin, sendRequestCallbackEmailToAdmin, sendSurgeryScheduleEmailToAdmin } from "../utils/nodemailer/sendMail";
+import { IQuickDoctorConnectForm } from "../interfaces/entities/contact.entity";
 
 async function scheduleSurgery(patientDetails: IScheduleSurgeryForm): Promise<void> {
     try {
@@ -86,4 +87,24 @@ async function requestCallback(patientDetails: IRequestCallbackForm): Promise<vo
     }
 }
 
-export { scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck, requestCallback }
+async function quickDoctorConnect(details: IQuickDoctorConnectForm): Promise<void> {
+    try {
+        const patient = await Contact.create(details);
+        if (!patient) {
+            throw new ApiErrorResponse(QUICK_DOCTOR_CONNECT_RESPONSE.SERVER_ERROR.statusCode, QUICK_DOCTOR_CONNECT_RESPONSE.SERVER_ERROR.message)
+        }
+
+        const adminInformed = await sendQuickDoctorConnectEmailToAdmin(config.clientEmail, details);
+
+        if (!adminInformed) {
+            throw new ApiErrorResponse(QUICK_DOCTOR_CONNECT_RESPONSE.SERVER_ERROR.statusCode, QUICK_DOCTOR_CONNECT_RESPONSE.SERVER_ERROR.message)
+        }
+    } catch (error:any) {
+        if (error instanceof ApiErrorResponse) {
+            throw error;
+        }
+        throw new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, error.message);
+    }
+}
+
+export { quickDoctorConnect, scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck, requestCallback }

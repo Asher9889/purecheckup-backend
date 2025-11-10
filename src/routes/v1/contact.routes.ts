@@ -7,6 +7,7 @@ router.post("/advisor", contactController.scheduleSurgery);
 router.post("/insurance-advisor", contactController.talkToInsuranceAdvisor);
 router.post("/quick-emi-check", contactController.quickEmiCheck);
 router.post("/request-callback", contactController.requestCallback);
+router.post("/quick-doctor-connect", contactController.quickDoctorConnect)
 // router.post("/login", authController.login);
 // router.post("/refresh", authController.refresh);
 // router.post("/logout", authController.logout);

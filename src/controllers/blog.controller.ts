@@ -104,7 +104,8 @@ async function getBlogs(req: Request, res: Response, next: NextFunction) {
     res.setHeader("Access-Control-Expose-Headers", "Content-Range");
     res.setHeader("Content-Range", `blogs ${start}-${start + fixedBlogs.length - 1}/${total}`);
 
-    return res.status(StatusCodes.OK).json(new ApiSuccessResponse(StatusCodes.OK, blogResponse.fetched, fixedBlogs, total));
+    // return res.status(StatusCodes.OK).json(new ApiSuccessResponse(StatusCodes.OK, blogResponse.fetched, fixedBlogs, total));
+    return res.status(StatusCodes.OK).json(blogs);
   } catch (error:any) {
     console.error("Error fetching blog:", error);
     if (error instanceof ApiErrorResponse){

@@ -58,9 +58,25 @@ const REQUEST_CALLBACK_RESPONSE = {
     }
 };
 
+const QUICK_DOCTOR_CONNECT_RESPONSE = {
+    SUCCESS: {
+        statusCode: 200,
+        message: 'Your request has been received successfully! Our medical team will review your details and contact you shortly.',
+    },
+    VALIDATION_ERROR: {
+        statusCode: 400,
+        message: 'Please provide all required information for the request.'
+    },  
+    SERVER_ERROR: { 
+        statusCode: 500,
+        message: 'We encountered an error while processing your request. Please try again later.'
+    }
+};
+
 export {
     SCHEDULE_SURGERY_RESPONSE,
     TALK_TO_INSURANCE_ADVISOR_RESPONSE,
     QUICK_EMI_CHECK_RESPONSE,
-    REQUEST_CALLBACK_RESPONSE
+    REQUEST_CALLBACK_RESPONSE,
+    QUICK_DOCTOR_CONNECT_RESPONSE
 };

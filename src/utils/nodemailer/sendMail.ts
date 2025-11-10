@@ -3,6 +3,7 @@ import { config } from "../../config";
 import { IBookConsultationForm, IConditionConsultationForm } from "../../interfaces";
 import path from "path";
 import fs from "fs";
+import { IQuickDoctorConnectForm } from "../../interfaces/entities/contact.entity";
 
 const transporter = nodemailer.createTransport({
   host: config.hostingerWebMailHost,
@@ -395,5 +396,48 @@ async function sendRequestCallbackEmailToAdmin(
   }
 }
 
+async function sendQuickDoctorConnectEmailToAdmin(adminEmail: string,
+  data: IQuickDoctorConnectForm ){
+  try {
+    const info = await transporter.sendMail({
+      from: `"PureCheckup" <${config.hostingerWebMailUser}>`,
+      to: adminEmail,
+      subject: "🩺 New Quick Doctor Connect Request - PureCheckup",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #007BFF;">New Quick Doctor Connect Request</h2>
+          <p>Hello Admin,</p>
+          <p>A new quick doctor connect request has been submitted on <strong>PureCheckup</strong>.</p>
+          
+          <h3 style="color: #444;">Patient Details:</h3>
+          <ul style="list-style-type: none; padding: 0;">
+            <li><strong>Doctor Name:</strong> ${data.doctorName}</li>
+            <li><strong>Mobile:</strong> ${data.mobile}</li>
+            <li><strong>City:</strong> ${data.city}</li>
+            <li><strong>Specialization:</strong> ${data.specialization}</li>
+            <li><strong>Mail:</strong> ${data.mail}</li>
+          </ul>
 
-export { sendAdminConsultationNotification, sendAdminSignupNotification, sendUserWelcomeEmail, sendUserConsultationConfirmation, sendForgetPasswordEmail, sendSurgeryScheduleEmailToAdmin, sendQuickEmiCheckEmailToAdmin, sendRequestCallbackEmailToAdmin }
+          <p style="margin-top: 20px;">
+            Please reach out to the patient to confirm their appointment and assign the appropriate medical expert.
+          </p>
+
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
+          <p style="font-size: 12px; color: #888;">
+            This is an automated email from PureCheckup’s quick doctor connect system.<br/>
+            — PureCheckup Admin Notification Service
+          </p>
+        </div>
+      `,
+    });
+
+    console.log("✅ Quick doctor connect email sent to admin:", info.messageId);
+    return true;
+  } catch (err) {
+    console.error("❌ Error sending quick doctor connect email:", err);
+    return false;
+  }
+}
+
+
+export { sendQuickDoctorConnectEmailToAdmin, sendAdminConsultationNotification, sendAdminSignupNotification, sendUserWelcomeEmail, sendUserConsultationConfirmation, sendForgetPasswordEmail, sendSurgeryScheduleEmailToAdmin, sendQuickEmiCheckEmailToAdmin, sendRequestCallbackEmailToAdmin }

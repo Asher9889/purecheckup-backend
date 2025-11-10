@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ApiErrorResponse, ApiSuccessResponse, validateQuickEmiCheckForm, validateScheduleSurgeryForm, validateTalkToInsuranceAdvisorForm } from "../utils";
-import { QUICK_EMI_CHECK_RESPONSE, REQUEST_CALLBACK_RESPONSE, SCHEDULE_SURGERY_RESPONSE, TALK_TO_INSURANCE_ADVISOR_RESPONSE } from "../constants/contact/contactApiResponse";
+import { QUICK_DOCTOR_CONNECT_RESPONSE, QUICK_EMI_CHECK_RESPONSE, REQUEST_CALLBACK_RESPONSE, SCHEDULE_SURGERY_RESPONSE, TALK_TO_INSURANCE_ADVISOR_RESPONSE } from "../constants/contact/contactApiResponse";
 import { contactService } from "../services";
 import { contactType } from "../constants";
-import { validateRequestCallbackForm } from "../utils/schema-validation/contact.schema";
+import { validateQuickDoctorConnectForm, validateRequestCallbackForm } from "../utils/schema-validation/contact.schema";
 
 export async function scheduleSurgery(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
@@ -93,3 +93,24 @@ export async function requestCallback(req: Request, res: Response, next: NextFun
         return next(new ApiErrorResponse(REQUEST_CALLBACK_RESPONSE.SERVER_ERROR.statusCode, error.message))
     } 
 }
+
+export async function quickDoctorConnect(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+    try {
+        const formdata = req.body;
+        formdata.code = contactType.QUICK_DOCTOR_CONNECT;
+        const { error, value } = validateQuickDoctorConnectForm(formdata);
+        if (error) {
+            throw new ApiErrorResponse(QUICK_DOCTOR_CONNECT_RESPONSE.VALIDATION_ERROR.statusCode, error.message);
+        }
+        await contactService.quickDoctorConnect(value)
+        // await sendUserConsultationConfirmation(value);
+        return res.status(QUICK_DOCTOR_CONNECT_RESPONSE.SUCCESS.statusCode).json(new ApiSuccessResponse(QUICK_DOCTOR_CONNECT_RESPONSE.SUCCESS.statusCode, QUICK_DOCTOR_CONNECT_RESPONSE.SUCCESS.message))
+    } catch (error: any) {
+        console.error("Error sending mail:", error);
+        if (error instanceof ApiErrorResponse) {
+            return next(error);
+        }
+        return next(new ApiErrorResponse(QUICK_DOCTOR_CONNECT_RESPONSE.SERVER_ERROR.statusCode, error.message))
+    } 
+}
+        
