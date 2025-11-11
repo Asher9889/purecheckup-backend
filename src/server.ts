@@ -18,7 +18,7 @@ connectMongoDB().catch((err) => {
 
 app.use(cors({
   origin: "*",
-  exposedHeaders: ["Content-Range", "X-Total-Count"],
+//   exposedHeaders: ["Content-Range", "X-Total-Count"],
 }));
 
 

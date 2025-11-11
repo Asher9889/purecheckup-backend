@@ -1,35 +1,34 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Blog } from "../models";
-import { ApiErrorResponse, ApiSuccessResponse, blogResponse } from "../utils";
+import { ApiErrorResponse, ApiSuccessResponse, blogResponse, validateBlogSchema } from "../utils";
+import { IBlog } from "../models/blog.model";
 
 async function createblog(req: Request, res: Response, next: NextFunction) {
   try {
-    const { title, content } = req.body;
-    if (!title || !content) {
-      throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, "Title and Content mandatory.")
+    const value:IBlog = validateBlogSchema(req.body);
+
+    const isBlogExists = await Blog.findOne({slug: value.slug}).lean();
+
+    if(isBlogExists){
+      throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, blogResponse.slugExists);
     }
-    // Find the last blog's ID
-    const lastBlog = await Blog.findOne({}, {_id: 0, __v: 0}).sort({ id: -1 }).exec();
-    const newId = lastBlog ? lastBlog.id + 1 : 1;
 
-    // multer adds `file` to req
-    const imageUrl = req.file
-      ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
-      : null;
-
-    const blog = await Blog.create({
-      id: newId,
-      title,
-      content,
-      image: imageUrl,
-    });
+   const blog = await Blog.create({
+    title: value.title,
+    content: value.content,
+    summary: value.summary,
+    featuredImage: value.featuredImage,
+    author: value.author,
+    slug: value.slug,
+   })
+   
 
     return res.status(StatusCodes.CREATED).json(new ApiSuccessResponse(StatusCodes.CREATED, blogResponse.created, blog));
   } catch (error:any) {
     console.error("Error creating blog:", error);
     if (error instanceof ApiErrorResponse){
-      next(error);
+      return next(error);
     }
     return next(new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, error.message))
   }
@@ -38,8 +37,7 @@ async function createblog(req: Request, res: Response, next: NextFunction) {
 // GET /blogs?filter={} & range=[0,9] & sort=["id","ASC"]
 //========== Get all blogs===========>
 async function getBlogs(req: Request, res: Response, next: NextFunction) {
-  try {
-    // Parse query params from react-admin
+  try { // Parse query params from react-admin
     const { range, sort, filter } = req.query;
 
     // Default pagination values
@@ -91,25 +89,25 @@ async function getBlogs(req: Request, res: Response, next: NextFunction) {
       .lean();
 
     // Fix image URL duplication if any
-    const fixedBlogs = blogs.map((blog) => ({
-      ...blog,
-      image: blog.image
-        ? blog.image.startsWith("http")
-          ? blog.image.replace(/(http:\/\/localhost:3005){2}/, "http://localhost:3005")
-          : `${req.protocol}://${req.get("host")}${blog.image}`
-        : null,
-    }));
+    // const fixedBlogs = blogs.map((blog) => ({
+    //   ...blog,
+    //   image: blog.image
+    //     ? blog.image.startsWith("http")
+    //       ? blog.image.replace(/(http:\/\/localhost:3005){2}/, "http://localhost:3005")
+    //       : `${req.protocol}://${req.get("host")}${blog.image}`
+    //     : null,
+    // }));
 
     // Set required React-Admin headers
-    res.setHeader("Access-Control-Expose-Headers", "Content-Range");
-    res.setHeader("Content-Range", `blogs ${start}-${start + fixedBlogs.length - 1}/${total}`);
+    // res.setHeader("Access-Control-Expose-Headers", "Content-Range");
+    // res.setHeader("Content-Range", `blogs ${start}-${start + fixedBlogs.length - 1}/${total}`);
 
     // return res.status(StatusCodes.OK).json(new ApiSuccessResponse(StatusCodes.OK, blogResponse.fetched, fixedBlogs, total));
     return res.status(StatusCodes.OK).json(blogs);
   } catch (error:any) {
     console.error("Error fetching blog:", error);
     if (error instanceof ApiErrorResponse){
-      next(error);
+      return next(error);
     }
     return next(new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, error.message));
   }

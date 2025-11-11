@@ -11,7 +11,10 @@ router.get("/:id", blogsController.getBlog);
 
 
 // 🔐 Admin-protected routes
-router.post("/", authenticate, authorize("blog", "create"), upload.single("image"), blogsController.createblog);
+router.post("/", 
+    // authenticate,
+    //  authorize("blog", "create"), upload.single("image"), 
+     blogsController.createblog);
 router.put("/:id", authenticate, authorize("blog", "update"), upload.single("image"), blogsController.updateBlog);
 router.delete("/:id", authenticate, authorize("blog", "delete"), blogsController.deleteBlog);
 

@@ -4,15 +4,16 @@ import authRoutes from "./auth.routes";
 import userRoutes from "./user.routes";
 import contactRoutes from "./contact.routes";
 import { authMiddleware } from "../../middlewares";
-import raExpressMongoose from 'express-mongoose-ra-json-server';
 import { Blog } from "../../models";
-
+import uploadRoutes from "./upload.routes";
 
 const router = express.Router();
 
 router.use("/user", userRoutes);
 router.use("/contact", contactRoutes);
 router.use("/blogs", blogRoutes);
+router.use("/uploads", uploadRoutes);
+
 
 // router.use("/blogs", (req, res, next)=> {
 //     if (typeof req.query.filter === "string") {

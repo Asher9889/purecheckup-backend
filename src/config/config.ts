@@ -25,6 +25,11 @@ interface Config {
     superAdminPassword: string;
     superAdminPhone: string;
     superAdminFullName: string;
+
+    // Cloudinary
+    cloudinaryCloudName: string;
+    cloudinaryApiKey: string;
+    cloudinaryApiSecret: string;
 }
 
 const config: Config = {
@@ -53,7 +58,12 @@ const config: Config = {
     hostingerWebMailPass: process.env.HOSTINGER_WEB_MAIL_AUTH_PASS || "",
 
     // Client Email
-    clientEmail: process.env.CLIENT_EMAIL || ""
+    clientEmail: process.env.CLIENT_EMAIL || "",
+
+    // Cloudinary
+    cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
+    cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || "",
+    cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || "",
 
 };
 

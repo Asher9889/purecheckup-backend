@@ -4,7 +4,8 @@ const blogResponse = {
     idRequired: "Please provide valid blog id.",
     notExists: "Blog does not exits for this id",
     updated: "Blog updated successfully.",
-    deleted: "Blog deleted successfully."
+    deleted: "Blog deleted successfully.",
+    slugExists: "This slug is already exists for blog"
 }
 
 const authResponse = {

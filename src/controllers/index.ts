@@ -2,6 +2,7 @@ import { signUp, login, refresh, logout, me, forgetPassword } from "./auth.contr
 import { createblog, getBlogs, getBlog, updateBlog, deleteBlog } from "./blog.controller";
 import { bookFreeConsultation, bookConditionConsultation} from "./user.controller";
 import { quickDoctorConnect, scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck, requestCallback } from "./contact.controller";
+import { uploadImage } from "./upload.controller";
 
 const blogsController = {
     createblog, getBlogs, getBlog, updateBlog, deleteBlog
@@ -18,4 +19,9 @@ const userController = {
 const contactController = {
     quickDoctorConnect, scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck, requestCallback
 }
-export { blogsController, authController, userController, contactController }
+
+const uploadController = {
+    uploadImage
+}
+
+export { blogsController, authController, userController, contactController, uploadController }

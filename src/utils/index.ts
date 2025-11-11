@@ -11,7 +11,7 @@ import { getCookieOptions } from "./cookie-options/cookieOptions";
 //============ Schema Validations =================>
 import { validateUserSchema, validateLoginUserSchema } from "./schema-validation/validateUser.schema";
 import { validateScheduleSurgeryForm, validateTalkToInsuranceAdvisorForm, validateQuickEmiCheckForm } from "./schema-validation/contact.schema";
-
+import { validateBlogSchema } from "./schema-validation/blog.schema";
 
 //============= Node Mailer ===============>
 import { sendAdminSignupNotification, sendUserWelcomeEmail, sendAdminConsultationNotification, sendUserConsultationConfirmation, sendForgetPasswordEmail } from "./nodemailer/sendMail";
@@ -20,6 +20,16 @@ import { sendAdminSignupNotification, sendUserWelcomeEmail, sendAdminConsultatio
 //============= Tokens ===============>
 import { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } from "./tokens/tokens.utils";
 
+
+//============= Cloudinary =============>
+import { uploadImageFromFile, getAutoCropUrl, getOptimizedUrl } from "./cloudinary/upload";
+
+export const cloudinary = {
+    uploadImageFromFile,
+    getAutoCropUrl,
+    getOptimizedUrl
+}
+
 export const jwtToken = {
     generateAccessToken,
     generateRefreshToken,
@@ -27,4 +37,6 @@ export const jwtToken = {
     verifyRefreshToken
 }
 
-export { ApiErrorResponse, ApiSuccessResponse, checkRouteExists, globalErrorHandler, blogResponse, validateUserSchema, validateLoginUserSchema, authResponse, sendAdminSignupNotification, sendUserWelcomeEmail, sendAdminConsultationNotification, sendUserConsultationConfirmation, sendForgetPasswordEmail, getCookieOptions, validateScheduleSurgeryForm, validateTalkToInsuranceAdvisorForm, validateQuickEmiCheckForm }  
+
+
+export { validateBlogSchema, ApiErrorResponse, ApiSuccessResponse, checkRouteExists, globalErrorHandler, blogResponse, validateUserSchema, validateLoginUserSchema, authResponse, sendAdminSignupNotification, sendUserWelcomeEmail, sendAdminConsultationNotification, sendUserConsultationConfirmation, sendForgetPasswordEmail, getCookieOptions, validateScheduleSurgeryForm, validateTalkToInsuranceAdvisorForm, validateQuickEmiCheckForm }  

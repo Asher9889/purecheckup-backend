@@ -1,21 +1,26 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IBlog extends Document {
-  id: number;       // main numeric ID
   title: string;
+  slug: string;
+  summary: string;
+  featuredImage?: string;
+  author: string;
   content: string;
-  image?: string;
 }
 
 const blogSchema = new Schema<IBlog>(
   {
-    id: { type: Number, required: true, unique: true, index: true }, // main id
     title: { type: String, required: true },
+    slug: { type: String, required: true, unique: true },
+    summary: { type: String, required: true },
+    featuredImage: { type: String },
+    author: { type: String, required: true },
     content: { type: String, required: true },
-    image: { type: String },
   },
   { timestamps: true }
 );
+
 
 const Blog = mongoose.model<IBlog>("Blog", blogSchema);
 
