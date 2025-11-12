@@ -1,8 +1,8 @@
 const blogResponse = {
     created: "Blog created successfully.",
     fetched: "Blogs fetched successfully",
-    idRequired: "Please provide valid blog id.",
-    notExists: "Blog does not exits for this id",
+    slugRequired: "Please provide valid blog slug.",
+    notExists: "Blog does not exits for this slug",
     updated: "Blog updated successfully.",
     deleted: "Blog deleted successfully.",
     slugExists: "This slug is already exists for blog"

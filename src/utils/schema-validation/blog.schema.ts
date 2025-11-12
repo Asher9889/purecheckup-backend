@@ -31,12 +31,12 @@ const blogSchema = Joi.object({
     "any.required": "Content is required",
   }),
 
-  featuredImage: Joi.string()
+  featuredImage: Joi.string().trim().allow("")
     .uri()
-    .optional()
     .messages({
       "string.uri": "Image must be a valid URL",
-    }),
+    })
+    .optional(),
 
   author: Joi.string().min(2).max(60).required().messages({
     "string.empty": "Author name is required",

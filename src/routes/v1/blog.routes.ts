@@ -6,7 +6,7 @@ const router = express.Router();
 
 // 🔓 Public routes
 router.get("/", blogsController.getBlogs);
-router.get("/:id", blogsController.getBlog);
+router.get("/:slug", blogsController.getBlog);
 
 
 

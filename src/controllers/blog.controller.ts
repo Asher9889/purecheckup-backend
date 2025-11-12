@@ -102,8 +102,8 @@ async function getBlogs(req: Request, res: Response, next: NextFunction) {
     // res.setHeader("Access-Control-Expose-Headers", "Content-Range");
     // res.setHeader("Content-Range", `blogs ${start}-${start + fixedBlogs.length - 1}/${total}`);
 
-    // return res.status(StatusCodes.OK).json(new ApiSuccessResponse(StatusCodes.OK, blogResponse.fetched, fixedBlogs, total));
-    return res.status(StatusCodes.OK).json(blogs);
+    return res.status(StatusCodes.OK).json(new ApiSuccessResponse(StatusCodes.OK, blogResponse.fetched, blogs, total));
+    // return res.status(StatusCodes.OK).json(blogs);
   } catch (error:any) {
     console.error("Error fetching blog:", error);
     if (error instanceof ApiErrorResponse){
@@ -111,19 +111,17 @@ async function getBlogs(req: Request, res: Response, next: NextFunction) {
     }
     return next(new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, error.message));
   }
-}
+} 
 
 //========== Get single blog===========>
 async function getBlog(req: Request, res: Response, next: NextFunction){
  try {
-   const { id } = req.params;
-   console.log("req.params", req.params)
- 
-   if(!id){
-     throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, blogResponse.idRequired)
+   const { slug } = req.params;
+   if(!slug){
+     throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, blogResponse.slugRequired)
    }
-   const blog = await Blog.findOne({id: id}, {_id: 0, __v: 0}).exec();
-   if(!blog?.id){
+   const blog = await Blog.findOne({slug: slug}, {_id: 0, __v: 0}).lean();
+   if(!blog?.slug){
      throw new ApiErrorResponse(StatusCodes.NOT_FOUND, blogResponse.notExists);
    } 
    return res.status(StatusCodes.OK).json(new ApiSuccessResponse(StatusCodes.OK, blogResponse.fetched, blog, 1));
@@ -136,13 +134,13 @@ async function getBlog(req: Request, res: Response, next: NextFunction){
  }
 }
 
-//========== update one blog===========>
+//========== update one blog ===========>
 async function updateBlog(req: Request, res: Response, next: NextFunction) {
   try {
-    const { id } = req.params;
+    const { slug } = req.params;
 
-    if (!id) {
-      throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, blogResponse.idRequired);
+    if (!slug) {
+      throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, blogResponse.slugRequired);
     }
 
     // If you're sending multipart/form-data (for image uploads)
@@ -154,7 +152,7 @@ async function updateBlog(req: Request, res: Response, next: NextFunction) {
     }
 
     const updatedBlog = await Blog.findOneAndUpdate(
-      { id: Number(id) }, // match your custom id field, not _id
+      { slug }, // match your custom id field, not _id
       updateData,
       { new: true, projection: { _id: 0, __v: 0 } }
     ).exec();
@@ -178,13 +176,13 @@ async function updateBlog(req: Request, res: Response, next: NextFunction) {
 //========== Delete one blog ===========>
 async function deleteBlog(req: Request, res: Response, next: NextFunction) {
   try {
-    const { id } = req.params;
+    const { slug } = req.params;
 
-    if (!id) {
-      throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, blogResponse.idRequired);
+    if (!slug) {
+      throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, blogResponse.slugRequired);
     }
 
-    const deletedBlog = await Blog.findOneAndDelete({ id: Number(id) }).exec();
+    const deletedBlog = await Blog.findOneAndDelete({ slug: slug }).exec();
 
     if (!deletedBlog) {
       throw new ApiErrorResponse(StatusCodes.NOT_FOUND, blogResponse.notExists);
@@ -201,4 +199,5 @@ async function deleteBlog(req: Request, res: Response, next: NextFunction) {
     return next(new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, error.message));
   }
 }
+
 export { createblog, getBlogs, getBlog, updateBlog, deleteBlog };
