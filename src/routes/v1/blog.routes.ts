@@ -15,7 +15,11 @@ router.post("/",
     // authenticate,
     //  authorize("blog", "create"), upload.single("image"), 
      blogsController.createblog);
-router.put("/:id", authenticate, authorize("blog", "update"), upload.single("image"), blogsController.updateBlog);
+router.put("/:slug", 
+    // authenticate, 
+    // authorize("blog", "update"), 
+    // upload.single("image"), 
+    blogsController.updateBlog);
 router.delete("/:id", authenticate, authorize("blog", "delete"), blogsController.deleteBlog);
 
 

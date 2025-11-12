@@ -143,13 +143,7 @@ async function updateBlog(req: Request, res: Response, next: NextFunction) {
       throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, blogResponse.slugRequired);
     }
 
-    // If you're sending multipart/form-data (for image uploads)
-    let updateData: any = { ...req.body };
-
-    // If image uploaded, save path
-    if (req.file) {
-      updateData.image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-    }
+    let updateData = { ...req.body };
 
     const updatedBlog = await Blog.findOneAndUpdate(
       { slug }, // match your custom id field, not _id

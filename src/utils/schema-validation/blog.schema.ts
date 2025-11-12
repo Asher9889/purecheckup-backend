@@ -12,11 +12,11 @@ const blogSchema = Joi.object({
   }),
 
   slug: Joi.string()
-    .pattern(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+    // .pattern(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
     .required()
     .messages({
-      "string.pattern.base":
-        "Slug can only contain lowercase letters, numbers, and hyphens",
+      // "string.pattern.base":
+      //   "Slug can only contain lowercase letters, numbers, and hyphens",
       "any.required": "Slug is required",
     }),
 
