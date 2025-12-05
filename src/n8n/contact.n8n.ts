@@ -15,6 +15,7 @@ export async function appendToExcel(data: any): Promise<void> {
                 // Handle schedule surgery data
                 data.fullName = data.name; 
                 data.healthConcern = data.disease;
+                data.mobileNumber = data.mobile
                 break;
             case contactType.REQUEST_CALLBACK:
                 data.fullName = data.name;
