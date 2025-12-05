@@ -4,10 +4,20 @@ import { IBookConsultationForm, IConditionConsultationForm } from "../interfaces
 import { StatusCodes } from "http-status-codes";
 import { userPatientService } from "../services";
 import { validateConditionPatientSchema } from "../utils/schema-validation/validateUser.schema";
+import { n8nWorkflows } from "../n8n";
+import { contactType } from "../constants";
+
+interface IBookConsultationFormWithType extends IBookConsultationForm {
+    type: string;
+}
+
+interface IConditionConsultationFormWithType extends IConditionConsultationForm {
+    type: string;
+}
 
 async function bookFreeConsultation(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-        const formdata: IBookConsultationForm = req.body;
+        const formdata: IBookConsultationFormWithType = req.body;
 
         const adminInformed = await sendAdminConsultationNotification(formdata);
 
@@ -15,9 +25,14 @@ async function bookFreeConsultation(req: Request, res: Response, next: NextFunct
             throw new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, "Failed to send message to doctor")
         }
         if (formdata.email) {
-
             const userInformed = await sendUserConsultationConfirmation(formdata);
         }
+        if(formdata.email){
+            formdata.type = contactType.FREE_CONSULTATION_WITH_DETAILS;
+        }else{
+            formdata.type = contactType.FREE_CONSULTATION;
+        }
+        await n8nWorkflows.appendToExcel(formdata);
         // if(!userInformed){
         //     throw new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, "Failed to send message to patient")
         // }
@@ -35,11 +50,11 @@ async function bookConditionConsultation(req: Request, res: Response, next: Next
     try {
         // multer stores uploaded file metadata on req.file when using upload.single('image')
         const file = (req as any).file;
-        const formdata: IConditionConsultationForm = {
+        const formdata: IConditionConsultationFormWithType = {
             ...req.body,
             // ensure required fields exist according to interface; image can be undefined
             image: file ? file.path || file.filename || file.originalname : undefined,
-        } as IConditionConsultationForm;
+        } as IConditionConsultationFormWithType;
 
         const patientBooked = await userPatientService.bookConditionConsultationService(formdata);
         if(!patientBooked){
@@ -58,6 +73,8 @@ async function bookConditionConsultation(req: Request, res: Response, next: Next
         // if(!userInformed){
         //     throw new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, "Failed to send message to patient")
         // }
+        formdata.type = contactType.CONDITION_CONSULTATION;
+        await n8nWorkflows.appendToExcel(formdata);
         return res.status(StatusCodes.OK).json(new ApiSuccessResponse(StatusCodes.OK, "Your consultation has been booked successfully! Our medical team will reach out to you shortly."))
     } catch (error: any) {
         console.error("Error sending mail:", error);

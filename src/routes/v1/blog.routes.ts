@@ -15,7 +15,7 @@ router.post("/",
     // authenticate,
     //  authorize("blog", "create"), upload.single("image"), 
      blogsController.createblog);
-router.put("/:slug", 
+router.put("/:slug",  
     // authenticate, 
     // authorize("blog", "update"), 
     // upload.single("image"), 

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { StatusCodes } from "http-status-codes";
 import { config } from "../config";
 import { QUICK_DOCTOR_CONNECT_RESPONSE, QUICK_EMI_CHECK_RESPONSE, REQUEST_CALLBACK_RESPONSE, SCHEDULE_SURGERY_RESPONSE } from "../constants/contact/contactApiResponse";
@@ -6,6 +7,7 @@ import { Contact } from "../models";
 import { ApiErrorResponse } from "../utils";
 import { sendQuickDoctorConnectEmailToAdmin, sendQuickEmiCheckEmailToAdmin, sendRequestCallbackEmailToAdmin, sendSurgeryScheduleEmailToAdmin } from "../utils/nodemailer/sendMail";
 import { IQuickDoctorConnectForm } from "../interfaces/entities/contact.entity";
+import { n8nWorkflows } from "../n8n";
 
 async function scheduleSurgery(patientDetails: IScheduleSurgeryForm): Promise<void> {
     try {
@@ -19,6 +21,8 @@ async function scheduleSurgery(patientDetails: IScheduleSurgeryForm): Promise<vo
         if (!adminInformed) {
             throw new ApiErrorResponse(SCHEDULE_SURGERY_RESPONSE.SERVER_ERROR.statusCode, SCHEDULE_SURGERY_RESPONSE.SERVER_ERROR.message)
         }
+        
+        await n8nWorkflows.appendToExcel(patientDetails);
     } catch (error:any) {
         if (error instanceof ApiErrorResponse) {
             throw error;
@@ -59,6 +63,7 @@ async function quickEmiCheck(patientDetails: IQuickEmiCheckForm): Promise<void> 
         if (!adminInformed) {
             throw new ApiErrorResponse(QUICK_EMI_CHECK_RESPONSE.SERVER_ERROR.statusCode, QUICK_EMI_CHECK_RESPONSE.SERVER_ERROR.message)
         }
+        await n8nWorkflows.appendToExcel(patientDetails);
     } catch (error:any) {
         if (error instanceof ApiErrorResponse) {
             throw error;
@@ -79,6 +84,7 @@ async function requestCallback(patientDetails: IRequestCallbackForm): Promise<vo
         if (!adminInformed) {
             throw new ApiErrorResponse(REQUEST_CALLBACK_RESPONSE.SERVER_ERROR.statusCode, REQUEST_CALLBACK_RESPONSE.SERVER_ERROR.message)
         }
+        await n8nWorkflows.appendToExcel(patientDetails);
     } catch (error:any) {
         if (error instanceof ApiErrorResponse) {
             throw error;
@@ -99,6 +105,7 @@ async function quickDoctorConnect(details: IQuickDoctorConnectForm): Promise<voi
         if (!adminInformed) {
             throw new ApiErrorResponse(QUICK_DOCTOR_CONNECT_RESPONSE.SERVER_ERROR.statusCode, QUICK_DOCTOR_CONNECT_RESPONSE.SERVER_ERROR.message)
         }
+        await axios.post(config.n8nAppendToExcelWebhookUrl, details);
     } catch (error:any) {
         if (error instanceof ApiErrorResponse) {
             throw error;

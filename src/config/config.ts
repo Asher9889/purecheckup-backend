@@ -30,6 +30,10 @@ interface Config {
     cloudinaryCloudName: string;
     cloudinaryApiKey: string;
     cloudinaryApiSecret: string;
+
+    // N8N workflow
+    n8nAppendToExcelWebhookUrl: string;
+    
 }
 
 const config: Config = {
@@ -64,6 +68,9 @@ const config: Config = {
     cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
     cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || "",
     cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || "",
+
+    // N8N workflow
+    n8nAppendToExcelWebhookUrl: process.env.N8N_APPEND_TO_EXCEL_WEBHOOK_URL!!,
 
 };
 
