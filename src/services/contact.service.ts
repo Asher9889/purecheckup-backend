@@ -24,6 +24,7 @@ async function scheduleSurgery(patientDetails: IScheduleSurgeryForm): Promise<vo
         
         await n8nWorkflows.appendToExcel(patientDetails);
     } catch (error:any) {
+        console.error("error inside scheduleSurgery service:", error)
         if (error instanceof ApiErrorResponse) {
             throw error;
         }

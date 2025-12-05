@@ -70,7 +70,7 @@ const config: Config = {
     cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || "",
 
     // N8N workflow
-    n8nAppendToExcelWebhookUrl: process.env.N8N_APPEND_TO_EXCEL_WEBHOOK_URL!!,
+    n8nAppendToExcelWebhookUrl: process.env.N8N_APPEND_TO_EXCEL!!,  
 
 };
 

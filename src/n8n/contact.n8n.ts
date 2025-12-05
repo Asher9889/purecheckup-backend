@@ -5,6 +5,7 @@ import { config } from "../config";
 import { contactType } from "../constants/common/constant";
 
 export async function appendToExcel(data: any): Promise<void> {
+    console.log("data is", data)
     try {
         switch (data.type || data.code) {
             case contactType.FREE_CONSULTATION:
@@ -24,6 +25,7 @@ export async function appendToExcel(data: any): Promise<void> {
                 data.fullName = data.name;
                 data.mobileNumber = data.mobile;
                 data.healthConcern = data.disease;
+                break;
             default:
                 // Handle other contact types if needed
                 break;
