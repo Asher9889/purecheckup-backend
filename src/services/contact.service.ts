@@ -44,6 +44,7 @@ async function talkToInsuranceAdvisor(patientDetails: ITalkToInsuranceAdvisorFor
         if (!adminInformed) {
             throw new ApiErrorResponse(SCHEDULE_SURGERY_RESPONSE.SERVER_ERROR.statusCode, SCHEDULE_SURGERY_RESPONSE.SERVER_ERROR.message)
         }
+        await n8nWorkflows.appendToExcel(patientDetails);
     } catch (error:any) {
         if (error instanceof ApiErrorResponse) {
             throw error;

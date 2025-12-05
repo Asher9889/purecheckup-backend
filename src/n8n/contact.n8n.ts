@@ -20,12 +20,20 @@ export async function appendToExcel(data: any): Promise<void> {
                 data.fullName = data.name;
                 data.mobileNumber = data.mobile;
                 data.condition = data.message;
+                data.type = data.code;
                 break;
             case contactType.QUICK_EMI_CHECK:
                 data.fullName = data.name;
                 data.mobileNumber = data.mobile;
                 data.healthConcern = data.disease;
+                data.type = data.code;
                 break;
+            case contactType.TALK_TO_INSURANCE_ADVISOR:
+                data.fullName = data.name;
+                data.mobileNumber = data.mobile;
+                data.healthConcern = data.disease;
+                data.type = data.code;
+                break; 
             default:
                 // Handle other contact types if needed
                 break;
