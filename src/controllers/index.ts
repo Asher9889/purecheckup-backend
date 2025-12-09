@@ -1,7 +1,7 @@
 import { signUp, login, refresh, logout, me, forgetPassword } from "./auth.controller";
 import { createblog, getBlogs, getBlog, updateBlog, deleteBlog } from "./blog.controller";
-import { bookFreeConsultation, bookConditionConsultation} from "./user.controller";
-import { quickDoctorConnect, scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck, requestCallback } from "./contact.controller";
+import { bookFreeConsultation, bookConditionConsultation } from "./user.controller";
+import { quickDoctorConnect, scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck, requestCallback, onboardingDoctor } from "./contact.controller";
 import { uploadImage } from "./upload.controller";
 
 const blogsController = {
@@ -17,7 +17,7 @@ const userController = {
 }
 
 const contactController = {
-    quickDoctorConnect, scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck, requestCallback
+    quickDoctorConnect, scheduleSurgery, talkToInsuranceAdvisor, quickEmiCheck, requestCallback, onboardingDoctor
 }
 
 const uploadController = {

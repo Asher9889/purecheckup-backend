@@ -11,7 +11,7 @@ export interface ITalkToInsuranceAdvisorForm {
     city: string;
     disease: string;
 }
-    
+
 export interface IQuickEmiCheckForm {
     name: string;
     mobile: string;
@@ -35,4 +35,15 @@ export interface IQuickDoctorConnectForm {
     mail: string;
     mobile: string;
     city: string;
+}
+
+export interface IDoctorOnboardForm {
+    name: string;
+    email: string;
+    mobile: string;
+    city: string;
+    specializations: string;
+    degree: string[];
+    expMbbs: string;
+    expPg: string;
 }

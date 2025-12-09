@@ -1,5 +1,5 @@
-import { contactType, ROLE } from "./common/constant";
+import { contactType, ROLE, doctorSpecialization, doctorDegree } from "./common/constant";
 
 
 
-export { contactType, ROLE }
+export { contactType, ROLE, doctorSpecialization, doctorDegree }

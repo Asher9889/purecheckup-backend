@@ -6,8 +6,8 @@ const SCHEDULE_SURGERY_RESPONSE = {
     VALIDATION_ERROR: {
         statusCode: 400,
         message: 'Please provide all required information for the surgery consultation.'
-    },  
-    SERVER_ERROR: { 
+    },
+    SERVER_ERROR: {
         statusCode: 500,
         message: 'We encountered an error while processing your request. Please try again later.'
     }
@@ -21,8 +21,8 @@ const TALK_TO_INSURANCE_ADVISOR_RESPONSE = {
     VALIDATION_ERROR: {
         statusCode: 400,
         message: 'Please provide all required information for the surgery consultation.'
-    },  
-    SERVER_ERROR: { 
+    },
+    SERVER_ERROR: {
         statusCode: 500,
         message: 'We encountered an error while processing your request. Please try again later.'
     }
@@ -36,8 +36,8 @@ const QUICK_EMI_CHECK_RESPONSE = {
     VALIDATION_ERROR: {
         statusCode: 400,
         message: 'Please provide all required information for the EMI check.'
-    },  
-    SERVER_ERROR: { 
+    },
+    SERVER_ERROR: {
         statusCode: 500,
         message: 'We encountered an error while processing your request. Please try again later.'
     }
@@ -51,8 +51,8 @@ const REQUEST_CALLBACK_RESPONSE = {
     VALIDATION_ERROR: {
         statusCode: 400,
         message: 'Please provide all required information for the request for callback.'
-    },  
-    SERVER_ERROR: { 
+    },
+    SERVER_ERROR: {
         statusCode: 500,
         message: 'We encountered an error while processing your request. Please try again later.'
     }
@@ -66,8 +66,23 @@ const QUICK_DOCTOR_CONNECT_RESPONSE = {
     VALIDATION_ERROR: {
         statusCode: 400,
         message: 'Please provide all required information for the request.'
-    },  
-    SERVER_ERROR: { 
+    },
+    SERVER_ERROR: {
+        statusCode: 500,
+        message: 'We encountered an error while processing your request. Please try again later.'
+    }
+};
+
+const ONBOARDING_DOCTOR_RESPONSE = {
+    SUCCESS: {
+        statusCode: 200,
+        message: 'Your onboarding request has been received successfully! Our team will review your details and contact you shortly.',
+    },
+    VALIDATION_ERROR: {
+        statusCode: 400,
+        message: 'Please provide all required information for the onboarding request.'
+    },
+    SERVER_ERROR: {
         statusCode: 500,
         message: 'We encountered an error while processing your request. Please try again later.'
     }
@@ -78,5 +93,6 @@ export {
     TALK_TO_INSURANCE_ADVISOR_RESPONSE,
     QUICK_EMI_CHECK_RESPONSE,
     REQUEST_CALLBACK_RESPONSE,
-    QUICK_DOCTOR_CONNECT_RESPONSE
+    QUICK_DOCTOR_CONNECT_RESPONSE,
+    ONBOARDING_DOCTOR_RESPONSE
 };

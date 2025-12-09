@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { IQuickDoctorConnectForm, IQuickEmiCheckForm, IRequestCallbackForm, IScheduleSurgeryForm, ITalkToInsuranceAdvisorForm } from "../../interfaces/entities/contact.entity";
-import { contactType } from "../../constants";
+import { contactType, doctorDegree, doctorSpecialization } from "../../constants";
 
 export function validateScheduleSurgeryForm(formdata: IScheduleSurgeryForm) {
     const schema = Joi.object({
@@ -182,6 +182,49 @@ export function validateQuickDoctorConnectForm(formdata: IQuickDoctorConnectForm
             'string.empty': 'City is required',
             'any.required': 'City is required'
         })
+    });
+    return schema.validate(formdata);
+}
+
+
+
+export function validateOnboardingDoctorForm(formdata: any) {
+    const schema = Joi.object({
+        name: Joi.string().required().messages({
+            'string.empty': 'Full name is required',
+            'any.required': 'Full name is required'
+        }),
+        email: Joi.string().email().required().messages({
+            'string.email': 'Please enter a valid email',
+            'string.empty': 'Email is required',
+            'any.required': 'Email is required'
+        }),
+        mobile: Joi.string()
+            .pattern(/^[0-9]{10}$/)
+            .required()
+            .messages({
+                'string.pattern.base': 'Please enter a valid mobile number',
+                'string.empty': 'Mobile number is required',
+                'any.required': 'Mobile number is required'
+            }),
+        city: Joi.string().required().messages({
+            'string.empty': 'City is required',
+            'any.required': 'City is required'
+        }),
+        specializations: Joi.string().valid(...doctorSpecialization).required().messages({
+            'string.empty': 'Specialization is required',
+            'any.required': 'Specialization is required',
+            'any.only': 'Invalid specialization selected'
+        }),
+        degree: Joi.array().items(Joi.string().valid(...doctorDegree)).default([]).messages({
+            'array.base': 'Degree must be an array',
+            'any.only': 'Invalid degree selected'
+        }),
+        expMbbs: Joi.string().required().messages({
+            'string.empty': 'MBBS experience is required',
+            'any.required': 'MBBS experience is required'
+        }),
+        expPg: Joi.string().trim().optional().allow("")
     });
     return schema.validate(formdata);
 }

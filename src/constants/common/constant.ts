@@ -15,4 +15,8 @@ const ROLE = {
     USER: "USER"
 }
 
-export { contactType, ROLE }
+const doctorSpecialization = ["Aesthetic/Plastic Surgeon", "Dental Surgeon", "ENT Surgeon", "General Surgeon", "Gynae/IVF Expert", "Laproscopic Surgeon", "Ophthalmologist", "Orthopedic Surgeon", "Urologist Surgeon", "Vascular Surgeon", "Others"];
+
+const doctorDegree = ["MBBS", "BDS", "MS", "MD", "MCH", "DM", "Post graduate Diploma", "DNB", "MDS", "Others"];
+
+export { contactType, ROLE, doctorSpecialization, doctorDegree }
