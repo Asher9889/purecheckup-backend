@@ -220,11 +220,11 @@ export function validateOnboardingDoctorForm(formdata: any) {
             'array.base': 'Degree must be an array',
             'any.only': 'Invalid degree selected'
         }),
-        expMbbs: Joi.string().required().messages({
-            'string.empty': 'MBBS experience is required',
+        expMbbs: Joi.number().required().messages({
+            'number.empty': 'MBBS experience is required',
             'any.required': 'MBBS experience is required'
         }),
-        expPg: Joi.string().trim().optional().allow("")
+        expPg: Joi.number().optional().allow(null)
     });
     return schema.validate(formdata);
 }

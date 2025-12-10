@@ -44,7 +44,7 @@ const DoctorOnboardSchema = new mongoose.Schema<IDoctorOnboard>({
         type: Number,
     },
 }, {
-    timestamps: true
+    timestamps: true, versionKey: false
 });
 
 const DoctorOnboard = mongoose.model<IDoctorOnboard>("DoctorOnboard", DoctorOnboardSchema);
