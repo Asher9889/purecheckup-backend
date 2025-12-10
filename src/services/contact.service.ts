@@ -5,8 +5,8 @@ import { ONBOARDING_DOCTOR_RESPONSE, QUICK_DOCTOR_CONNECT_RESPONSE, QUICK_EMI_CH
 import { IQuickEmiCheckForm, IRequestCallbackForm, IScheduleSurgeryForm, ITalkToInsuranceAdvisorForm } from "../interfaces";
 import { Contact, DoctorOnboard } from "../models";
 import { ApiErrorResponse } from "../utils";
-import { sendQuickDoctorConnectEmailToAdmin, sendQuickEmiCheckEmailToAdmin, sendRequestCallbackEmailToAdmin, sendSurgeryScheduleEmailToAdmin } from "../utils/nodemailer/sendMail";
-import { IQuickDoctorConnectForm } from "../interfaces/entities/contact.entity";
+import { sendOnboardingDoctorConfirmationEmail, sendOnboardingDoctorEmailToAdmin, sendQuickDoctorConnectEmailToAdmin, sendQuickEmiCheckEmailToAdmin, sendRequestCallbackEmailToAdmin, sendSurgeryScheduleEmailToAdmin } from "../utils/nodemailer/sendMail";
+import { IDoctorOnboardForm, IQuickDoctorConnectForm } from "../interfaces/entities/contact.entity";
 import { n8nWorkflows } from "../n8n";
 
 async function scheduleSurgery(patientDetails: IScheduleSurgeryForm): Promise<void> {
@@ -118,20 +118,19 @@ async function quickDoctorConnect(details: IQuickDoctorConnectForm): Promise<voi
 
 
 
-async function onboardingDoctor(details: any): Promise<void> {
+async function onboardingDoctor(details: IDoctorOnboardForm): Promise<void> {
     try {
         const doctor = await DoctorOnboard.create(details);
         if (!doctor) {
             throw new ApiErrorResponse(ONBOARDING_DOCTOR_RESPONSE.SERVER_ERROR.statusCode, ONBOARDING_DOCTOR_RESPONSE.SERVER_ERROR.message)
         }
 
-        // TODO: Add email notification for doctor onboarding if needed
-        // const adminInformed = await sendOnboardingDoctorEmailToAdmin(config.clientEmail, details);
-        // if (!adminInformed) {
-        //     throw new ApiErrorResponse(ONBOARDING_DOCTOR_RESPONSE.SERVER_ERROR.statusCode, ONBOARDING_DOCTOR_RESPONSE.SERVER_ERROR.message)
-        // }
-
-        // await axios.post(config.n8nAppendToExcelWebhookUrl, details);
+        const adminInformed = await sendOnboardingDoctorEmailToAdmin(config.clientEmail, details);
+        if (!adminInformed) {
+            throw new ApiErrorResponse(ONBOARDING_DOCTOR_RESPONSE.SERVER_ERROR.statusCode, ONBOARDING_DOCTOR_RESPONSE.SERVER_ERROR.message)
+        }
+        await sendOnboardingDoctorConfirmationEmail(details.email, details.name);
+        await axios.post(config.n8nAppendToDoctorOnboarding, details);
     } catch (error: any) {
         if (error instanceof ApiErrorResponse) {
             throw error;

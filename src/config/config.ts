@@ -15,8 +15,8 @@ interface Config {
     accessSecret: string;
     refreshSecret: string;
     hostingerWebMailHost: string;
-    hostingerWebMailPort:number;
-    hostingerWebMailUser:string;
+    hostingerWebMailPort: number;
+    hostingerWebMailUser: string;
     hostingerWebMailPass: string
     clientEmail: string;
 
@@ -33,7 +33,8 @@ interface Config {
 
     // N8N workflow
     n8nAppendToExcelWebhookUrl: string;
-    
+    n8nAppendToDoctorOnboarding: string;
+
 }
 
 const config: Config = {
@@ -70,7 +71,8 @@ const config: Config = {
     cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || "",
 
     // N8N workflow
-    n8nAppendToExcelWebhookUrl: process.env.N8N_APPEND_TO_EXCEL!!,  
+    n8nAppendToExcelWebhookUrl: process.env.N8N_APPEND_TO_EXCEL!!,
+    n8nAppendToDoctorOnboarding: process.env.N8N_APPEND_TO_DOCTOR_ONBOARDING!!,
 
 };
 

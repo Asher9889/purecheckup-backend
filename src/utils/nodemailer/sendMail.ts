@@ -3,7 +3,7 @@ import { config } from "../../config";
 import { IBookConsultationForm, IConditionConsultationForm } from "../../interfaces";
 import path from "path";
 import fs from "fs";
-import { IQuickDoctorConnectForm } from "../../interfaces/entities/contact.entity";
+import { IDoctorOnboardForm, IQuickDoctorConnectForm } from "../../interfaces/entities/contact.entity";
 
 const transporter = nodemailer.createTransport({
   host: config.hostingerWebMailHost,
@@ -30,7 +30,7 @@ async function sendAdminConsultationNotification(
   formdata: IBookConsultationForm | IConditionConsultationForm | any
 ): Promise<boolean> {
   try {
-    const mailOptions:any = {
+    const mailOptions: any = {
       from: `"PureCheckup" <${config.hostingerWebMailUser}>`,
       to: config.clientEmail,
       subject: "New Consultation Booking - PureCheckup",
@@ -43,27 +43,27 @@ async function sendAdminConsultationNotification(
             ${formdata.fullName && formatField(formdata.fullName, 'Full Name')}
             ${formdata.mobileNumber && formatField(formdata.mobileNumber, 'Mobile Number')}
             ${formdata.isWhatsaapConnect !== undefined && formatField(
-              formdata.isWhatsaapConnect ? 'Yes' : 'No', 
-              'WhatsApp Consent'
-            )}
+        formdata.isWhatsaapConnect ? 'Yes' : 'No',
+        'WhatsApp Consent'
+      )}
             ${formdata.email && formatField(formdata.email, 'Email')}
             ${formdata.healthConcern && formatField(formdata.healthConcern, 'Health Concern')}
             ${(formdata.condition || formdata.mode) && formatField(
-              formdata.condition || formdata.mode, 
-              formdata.condition ? 'Condition' : 'Consultation Type'
-            )}
+        formdata.condition || formdata.mode,
+        formdata.condition ? 'Condition' : 'Consultation Type'
+      )}
             ${formdata.city && formatField(formdata.city, 'City')}
             ${formatField(
-              new Date().toLocaleString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              }), 
-              'Requested At'
-            )}
+        new Date().toLocaleString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }),
+        'Requested At'
+      )}
           </ul>
           ${formdata.mode ? `<p><strong>Mode:</strong> ${formdata.mode}</p>` : ''}
           ${formdata.image ? `<p>An image was uploaded and attached to this email.</p>` : ''}
@@ -397,7 +397,7 @@ async function sendRequestCallbackEmailToAdmin(
 }
 
 async function sendQuickDoctorConnectEmailToAdmin(adminEmail: string,
-  data: IQuickDoctorConnectForm ){
+  data: IQuickDoctorConnectForm) {
   try {
     const info = await transporter.sendMail({
       from: `"PureCheckup" <${config.hostingerWebMailUser}>`,
@@ -440,4 +440,89 @@ async function sendQuickDoctorConnectEmailToAdmin(adminEmail: string,
 }
 
 
-export { sendQuickDoctorConnectEmailToAdmin, sendAdminConsultationNotification, sendAdminSignupNotification, sendUserWelcomeEmail, sendUserConsultationConfirmation, sendForgetPasswordEmail, sendSurgeryScheduleEmailToAdmin, sendQuickEmiCheckEmailToAdmin, sendRequestCallbackEmailToAdmin }
+
+async function sendOnboardingDoctorEmailToAdmin(
+  adminEmail: string,
+  doctorData: IDoctorOnboardForm
+): Promise<boolean> {
+  try {
+    const info = await transporter.sendMail({
+      from: `"PureCheckup" <${config.hostingerWebMailUser}>`,
+      to: adminEmail,
+      subject: "New Doctor Onboarding Request - PureCheckup",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #007BFF;">New Doctor Onboarding Request</h2>
+          <p>Hello Admin,</p>
+          <p>A new doctor has requested to onboard on <strong>PureCheckup</strong>.</p>
+          
+          <h3 style="color: #444;">Doctor Details:</h3>
+          <ul style="list-style-type: none; padding: 0;">
+            <li><strong>Name:</strong> ${doctorData.name}</li>
+            <li><strong>Email:</strong> ${doctorData.email}</li>
+            <li><strong>Mobile:</strong> ${doctorData.mobile}</li>
+            <li><strong>City:</strong> ${doctorData.city}</li>
+            <li><strong>Specializations:</strong> ${doctorData.specializations}</li>
+            <li><strong>Degrees:</strong> ${doctorData.degree && doctorData.degree.length > 0 ? doctorData.degree.join(", ") : "Not Provided"}</li>
+            <li><strong>MBBS Experience:</strong> ${doctorData.expMbbs} years</li>
+            <li><strong>PG Experience:</strong> ${doctorData.expPg ? doctorData.expPg + " years" : "Not Provided"}</li>
+          </ul>
+
+          <p style="margin-top: 20px;">
+            Please review the details and proceed with the verification process.
+          </p>
+
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
+          <p style="font-size: 12px; color: #888;">
+            This is an automated email from PureCheckup’s doctor onboarding system.<br/>
+            — PureCheckup Admin Notification Service
+          </p>
+        </div>
+      `,
+    });
+
+    console.log("✅ Doctor onboarding email sent to admin:", info.messageId);
+    return true;
+  } catch (err) {
+    console.error("❌ Error sending doctor onboarding email:", err);
+    return false;
+  }
+}
+
+
+async function sendOnboardingDoctorConfirmationEmail(
+  doctorEmail: string,
+  doctorName: string
+): Promise<boolean> {
+  try {
+    const info = await transporter.sendMail({
+      from: `"PureCheckup" <${config.hostingerWebMailUser}>`,
+      to: doctorEmail,
+      subject: "Application Received - PureCheckup Doctor Network",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #27AE60;">Application Received</h2>
+          <p>Dear Dr. ${doctorName},</p>
+          <p>Thank you for expressing interest in joining the <strong>PureCheckup</strong> doctor network.</p>
+          <p>We have received your details and our team is currently reviewing your profile. We will get back to you shortly regarding the next steps in the onboarding process.</p>
+          
+          <p>If you have any immediate questions, please feel free to reply to this email.</p>
+
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
+          <p style="font-size: 12px; color: #888;">
+            This is an automated confirmation email.<br/>
+            — PureCheckup Team
+          </p>
+        </div>
+      `,
+    });
+
+    console.log("✅ Doctor confirmation email sent:", info.messageId);
+    return true;
+  } catch (err) {
+    console.error("❌ Error sending doctor confirmation email:", err);
+    return false;
+  }
+}
+
+export { sendQuickDoctorConnectEmailToAdmin, sendAdminConsultationNotification, sendAdminSignupNotification, sendUserWelcomeEmail, sendUserConsultationConfirmation, sendForgetPasswordEmail, sendSurgeryScheduleEmailToAdmin, sendQuickEmiCheckEmailToAdmin, sendRequestCallbackEmailToAdmin, sendOnboardingDoctorEmailToAdmin, sendOnboardingDoctorConfirmationEmail }
