@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import type { StringValue } from "ms";
 
 dotenv.config();
 
@@ -19,6 +20,10 @@ interface Config {
     hostingerWebMailUser: string;
     hostingerWebMailPass: string
     clientEmail: string;
+
+    //accessTokenTime
+    accessTokenTime: string;
+    refreshTokenTime: string;
 
     // Super Admin Seeder
     superAdminEmail: string;
@@ -47,9 +52,11 @@ const config: Config = {
     mongoAuthSource: process.env.MONGO_AUTHSOURCE || "admin",
     // Build URL dynamically if not provided directly
     dbName: process.env.MONGO_DBNAME || "",
-    accessSecret: process.env.JWT_ACCESS_SECRET || "test",
-    refreshSecret: process.env.JWT_REFRESH_SECRET || "test",
-
+    accessSecret: process.env.JWT_ACCESS_SECRET!!,
+    refreshSecret: process.env.JWT_REFRESH_SECRET!!,
+    // Time
+    accessTokenTime: process.env.JWT_ACCESS_TOKEN_TIME as StringValue,
+    refreshTokenTime: process.env.JWT_REFRESH_TOKEN_TIME as StringValue,
     // Super Admin Seeder
     superAdminEmail: process.env.SUPER_ADMIN_EMAIL || "",
     superAdminPassword: process.env.SUPER_ADMIN_PASSWORD || "",

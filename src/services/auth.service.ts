@@ -45,6 +45,7 @@ async function register(user: IUser) {
 
 async function login(user: ILoginUser) {
 	const existingUser = await User.findOne({ email: user.email });
+	
 	if (!existingUser) {
 		throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, authResponse.notFound);
 	}

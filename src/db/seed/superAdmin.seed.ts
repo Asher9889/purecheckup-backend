@@ -15,7 +15,7 @@ export async function seedSuperAdmin() {
     }
   
     // Find the SUPER_ADMIN role first
-    const role = await Role.findOne({ name: "SUPER_ADMIN" });
+    const role = await Role.findOne({ role: "SUPER_ADMIN" });
     if (!role) {
       throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, "SUPER_ADMIN role not found. Seed roles first!");
     }

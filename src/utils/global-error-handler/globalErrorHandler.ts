@@ -9,10 +9,11 @@ function globalErrorHandler(err:any, req:Request, res:Response, next:NextFunctio
         const message = err.message || "Internal Server Error";
         const data = err.data;
         const stack = err.stack;
-        return res.status(statusCode).json(new ApiErrorResponse(statusCode, message, data, stack));
+        const errors = err.errors;
+        return res.status(statusCode).json(new ApiErrorResponse(statusCode, message, errors, data, stack));
     }else{
         console.log(err)
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, err.message || "Internal Server Error", null));
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(new ApiErrorResponse(StatusCodes.INTERNAL_SERVER_ERROR, err.message || "Internal Server Error"));
     }
 }
 

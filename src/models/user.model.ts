@@ -64,7 +64,7 @@ userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     { id: this._id, email: this.email }, 
     config.accessSecret as string,
-    { expiresIn: "15m" } // 15 minutes
+    { expiresIn: "1m" } // 15 minutes
   );
 };
 
@@ -73,7 +73,7 @@ userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     { id: this._id, email: this.email }, 
     config.refreshSecret as string,
-    { expiresIn: "7d" } // 7 days
+    { expiresIn: "3m" } // 7 days
   );
 };
 

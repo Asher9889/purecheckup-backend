@@ -1,5 +1,9 @@
 import Joi from "joi";
+import * as z from "zod";
 import { IUser, ILoginUser, IConditionConsultationForm } from "../../interfaces";
+import { error } from "console";
+import { StatusCodes } from "http-status-codes";
+import ApiErrorResponse from "../api-response/apiErrorResponse";
 
 interface IRegisterUser extends IUser {
     password: string;
@@ -62,32 +66,27 @@ function validateUserSchema(userDetails: IRegisterUser) {
 
 // Login Validation
 function validateLoginUserSchema(userDetails: ILoginUser) {
-    const loginUserSchema = Joi.object({
-        email: Joi.string()
-            .email()
-            .required()
-            .messages({
-                "string.email": "Please enter a valid email address.",
-                "string.empty": "Email is required.",
-                "any.required": "Email is required.",
-            }),
-
-        password: Joi.string()
-            .min(6)
-            .required()
-            .messages({
-                "string.min": "Password must be at least {#limit} characters.",
-                "string.empty": "Phone number is required.",
-                "any.required": "Password is required.",
-            }),
+    const loginUserSchema = z.object({
+        email: z.email(),
+        password: z.string().min(6)
     });
 
-    return loginUserSchema.validate(userDetails);
+    const result = loginUserSchema.safeParse(userDetails);
 
+    if (!result.success) {
+        const errors = result.error.issues.map(issue => {
+            return {
+                field: issue.path[0] as string,
+                message: issue.message
+            }
+        })
+        throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, "Invalid login details", errors);
+    }
+    return result.data;
 }
 
 // patient Validation
-function validateConditionPatientSchema (patientData:IConditionConsultationForm ) {
+function validateConditionPatientSchema(patientData: IConditionConsultationForm) {
     const patientSchema = Joi.object({
         fullName: Joi.string().required().messages({
             'string.empty': 'Full name is required',

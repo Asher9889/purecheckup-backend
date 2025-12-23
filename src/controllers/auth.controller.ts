@@ -22,11 +22,8 @@ async function signUp(req: Request, res: Response, next: NextFunction): Promise<
 
 async function login(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
-        const { value, error } = validateLoginUserSchema(req.body);
-        if (error) {
-            console.error("validation error", error)
-            throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, error.message);
-        }
+        const value = validateLoginUserSchema(req.body);
+
 
         const { refreshToken, accessToken, safeUser } = await authService.login(value);
 

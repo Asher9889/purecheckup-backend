@@ -7,6 +7,7 @@ import { checkRouteExists, globalErrorHandler } from './utils/index';
 import connectMongoDB from './db/connectMongoDB';
 import path from 'path';
 import compression from "compression";
+import { authMiddleware } from './middlewares';
 // import { authMiddleware } from './middlewares';
 
 const app = express();
@@ -17,7 +18,8 @@ connectMongoDB().catch((err) => {
 
 
 app.use(cors({
-  origin: "*",
+  origin: ["http://localhost:5173", "https://purecheckup.com"],
+  credentials: true
 //   exposedHeaders: ["Content-Range", "X-Total-Count"],
 }));
 
@@ -32,7 +34,7 @@ app.use(express.urlencoded());
 app.use(cookieParser()); 
 
 app.use(compression());
-// app.use(authMiddleware);
+
 
 app.use("/api", apiRoutes)
 app.get('/test', (req, res) => {

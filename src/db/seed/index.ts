@@ -3,16 +3,19 @@ import seedRoles from "./role.seed";
 import seedSuperAdmin from "./superAdmin.seed";
 
 async function seedAllData() {
-    await connectDB(mongoUrl)
+  try {
+    await connectDB(mongoUrl);
+
     await seedRoles();
     await seedSuperAdmin();
-    disconnectDB();
+
+    console.log("All data seeded successfully");
+  } catch (error) {
+    console.error("Error seeding data", error);
+    process.exitCode = 1;
+  } finally {
+    await disconnectDB();
+  }
 }
 
-seedAllData().then(()=>{
-    console.log("All data seeded successfully")
-}).catch((error)=>{
-    console.log("Error seeding data", error)
-}).finally(()=> {
-    process.exit(0);
-})
+seedAllData().finally(() => process.exit(0));

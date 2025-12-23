@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.use("/user", userRoutes);
 router.use("/contact", contactRoutes);
-router.use("/blogs", blogRoutes);
+router.use("/blogs", authMiddleware, blogRoutes);
 router.use("/uploads", uploadRoutes);
 
 

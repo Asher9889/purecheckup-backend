@@ -15,7 +15,7 @@ const authResponse = {
     inValidCredentials: "Invalid, Please try with correct password.",
     loggedIn: "User logged in successfully",
     noRefreshToken: "No refresh token provided", 
-    noAuth: "Invalid or expired refresh token",
+    noAuth: "Login again!! Invalid or expired access token",
     userNotFound: "User not found",
     tokenRefreshed: "Tokens refreshed successfully",
     tokenExpired: "Token is expired",

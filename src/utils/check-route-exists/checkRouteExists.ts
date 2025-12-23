@@ -5,7 +5,7 @@ import { ApiErrorResponse } from "../index"
 
 
 function checkRouteExists(req:Request, res:Response, next:NextFunction){
-    const error = new ApiErrorResponse(StatusCodes.BAD_REQUEST, "Incorrect Route", null);
+    const error = new ApiErrorResponse(StatusCodes.BAD_REQUEST, "Incorrect Route");
     next(error);
 }
 

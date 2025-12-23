@@ -38,8 +38,8 @@ const openRoutes = [
     "/api/v1/auth/register",
     "/api/v1/auth/refresh",
     "/api/v1/auth/forget-password",
-    "/api/v1/blogs",
 ];
+
 async function authMiddleware(req: AuthRequest, res: Response, next: NextFunction) {
     try {
         if (openRoutes.includes(req.path)) {
@@ -48,7 +48,7 @@ async function authMiddleware(req: AuthRequest, res: Response, next: NextFunctio
         
         const token = req.cookies.accessToken;
         if (!token) {
-            throw new ApiErrorResponse(StatusCodes.UNAUTHORIZED, authResponse.noRefreshToken);
+            throw new ApiErrorResponse(StatusCodes.UNAUTHORIZED, authResponse.noAuth);
         }
 
         const decoded: DecodedToken = jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as any;

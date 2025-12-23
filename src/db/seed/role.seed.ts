@@ -5,13 +5,15 @@ import { RoleService } from "../../domain";
 
 const roles = [
     {
-        name: "SUPER_ADMIN",
+        name: "Super Admin",
+        role: "SUPER_ADMIN",
         description: "Full access to all system resources, including managing admins, doctors, and blog content.",
         permissions: ["*"], // wildcard means unrestricted access
         isSystemRole: true,
     },
     {
-        name: "ADMIN",
+        name: "Admin",
+        role: "ADMIN",
         description: "Administrative privileges for managing blogs, doctors, and patient data.",
         permissions: [
             "blog:create",
@@ -24,19 +26,22 @@ const roles = [
         isSystemRole: true,
     },
     {
-        name: "EDITOR",
+        name: "Editor",
+        role: "EDITOR",
         description: "Can create and edit blog content but cannot manage users.",
         permissions: ["blog:create", "blog:update", "blog:view"],
         isSystemRole: true,
     },
     {
-        name: "DOCTOR",
+        name: "Doctor",
+        role: "DOCTOR",
         description: "Doctor with access to patient records and schedules.",
         permissions: ["patient:view", "patient:update", "appointment:view"],
         isSystemRole: true,
     },
     {
-        name: "PATIENT",
+        name: "Patient",
+        role: "PATIENT",
         description: "Basic user with access to their profile and blog reading privileges.",
         permissions: ["blog:view", "profile:view", "profile:update"],
         isSystemRole: true,
