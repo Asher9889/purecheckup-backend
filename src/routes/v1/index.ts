@@ -3,15 +3,13 @@ import blogRoutes from "./blog.routes";
 import authRoutes from "./auth.routes";
 import userRoutes from "./user.routes";
 import contactRoutes from "./contact.routes";
-import { authMiddleware } from "../../middlewares";
-import { Blog } from "../../models";
 import uploadRoutes from "./upload.routes";
 
 const router = express.Router();
 
 router.use("/user", userRoutes);
 router.use("/contact", contactRoutes);
-router.use("/blogs", authMiddleware, blogRoutes);
+router.use("/blogs", blogRoutes);
 router.use("/uploads", uploadRoutes);
 
 
