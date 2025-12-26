@@ -26,10 +26,10 @@ const blogSchema = Joi.object({
     "any.required": "Summary is required",
   }),
 
-  content: Joi.string().min(10).required().messages({
-    "string.min": "Content must be at least 10 characters long",
-    "any.required": "Content is required",
-  }),
+  content: Joi.object({
+    type: Joi.string().valid("doc").required(),
+    content: Joi.array().min(1).required(),
+  }).required(),
 
   featuredImage: Joi.string().trim().allow("")
     .uri()
@@ -44,12 +44,12 @@ const blogSchema = Joi.object({
 
 
 })
-  // .unknown(false); // ❌ disallow extra properties
+// .unknown(false); // ❌ disallow extra properties
 
 
 export function validateBlogSchema(data: IBlog) {
   const { error, value } = blogSchema.validate(data);
-  if(error){
+  if (error) {
     throw new ApiErrorResponse(StatusCodes.BAD_REQUEST, error.details[0].message);
   }
   return value;

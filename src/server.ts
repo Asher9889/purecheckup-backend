@@ -18,7 +18,7 @@ connectMongoDB().catch((err) => {
 
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://purecheckup.com"],
+  origin: ["http://localhost:5173", "http://localhost:5174",  "https://purecheckup.com"],
   credentials: true
 //   exposedHeaders: ["Content-Range", "X-Total-Count"],
 }));
